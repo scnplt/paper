@@ -10,7 +10,7 @@ import kotlinx.coroutines.tasks.await
 class FirebaseAuthService : AuthService() {
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
-    override suspend fun register(email: String, password: String): Response<User?> {
+    override suspend fun register(email: String, password: String): Response<User> {
         return try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val firebaseUser = result.user ?: throw Exception()
@@ -24,7 +24,7 @@ class FirebaseAuthService : AuthService() {
         }
     }
 
-    override suspend fun currentUser(): Response<User?> {
+    override suspend fun currentUser(): Response<User> {
         return try {
             val firebaseUser = auth.currentUser ?: throw AuthException.UserNotFound
             val user = User(firebaseUser.uid, firebaseUser.email!!)
@@ -34,7 +34,7 @@ class FirebaseAuthService : AuthService() {
         }
     }
 
-    override suspend fun logIn(email: String, password: String): Response<User?> {
+    override suspend fun logIn(email: String, password: String): Response<User> {
         return try {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             val firebaseUser = result.user ?: throw AuthException.IncorrectInformation
