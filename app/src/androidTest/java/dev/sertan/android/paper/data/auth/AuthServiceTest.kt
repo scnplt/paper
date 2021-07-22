@@ -13,7 +13,6 @@ import org.junit.Test
 
 @SmallTest
 @HiltAndroidTest
-@UninstallModules(AuthServiceModule::class)
 class AuthServiceTest {
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
