@@ -10,13 +10,23 @@ import kotlinx.coroutines.tasks.await
 class FirebaseAuthService : AuthService() {
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
-    override suspend fun register(email: String, password: String): Response<User> {
+    override suspend fun currentUser(): Response<User> {
         return try {
-            val result = auth.createUserWithEmailAndPassword(email, password).await()
-            val firebaseUser = result.user ?: throw Exception()
-            auth.signOut()
-            val user = User(firebaseUser.uid, email, password)
+            val user = auth.currentUser?.let { User(it.uid, it.email ?: "") }
             Response.success(user)
+        } catch (e: Exception) {
+            Response.error(e)
+        }
+    }
+
+    override suspend fun register(email: String, password: String): Response<Boolean> {
+        return try {
+            validateEmail(email)
+            validatePassword(password)
+
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            val firebaseUser = result.user?.also { auth.signOut() }
+            Response.success(firebaseUser != null)
         } catch (e: FirebaseAuthUserCollisionException) {
             Response.error(AuthException.UserAlreadyExist)
         } catch (e: Exception) {
@@ -24,22 +34,11 @@ class FirebaseAuthService : AuthService() {
         }
     }
 
-    override suspend fun currentUser(): Response<User> {
-        return try {
-            val firebaseUser = auth.currentUser ?: throw AuthException.UserNotFound
-            val user = User(firebaseUser.uid, firebaseUser.email!!)
-            Response.success(user)
-        } catch (e: Exception) {
-            Response.error(e)
-        }
-    }
-
-    override suspend fun logIn(email: String, password: String): Response<User> {
+    override suspend fun logIn(email: String, password: String): Response<Boolean> {
         return try {
             val result = auth.signInWithEmailAndPassword(email, password).await()
-            val firebaseUser = result.user ?: throw AuthException.IncorrectInformation
-            val user = User(firebaseUser.uid, firebaseUser.email!!)
-            Response.success(user)
+            if (result.user == null) throw AuthException.IncorrectInformation
+            Response.success(true)
         } catch (e: FirebaseAuthInvalidUserException) {
             Response.error(AuthException.IncorrectInformation)
         } catch (e: Exception) {
@@ -49,9 +48,8 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun logOut(): Response<Boolean> {
         return try {
-            if (currentUser().isError()) throw AuthException.UserNotFound
-            auth.signOut()
-            Response.success(true)
+            val result = currentUser().value?.also { auth.signOut() }
+            Response.success(result != null)
         } catch (e: Exception) {
             Response.error(e)
         }
@@ -59,11 +57,8 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun deleteAccount(): Response<Boolean> {
         return try {
-            val firebaseUser = auth.currentUser ?: throw AuthException.UserNotFound
-            firebaseUser.delete().await()
-            Response.success(true)
-        } catch (e: AuthException.UserNotFound) {
-            Response.error(AuthException.UserNotFound)
+            val firebaseUser = auth.currentUser?.apply { delete().await() }
+            Response.success(firebaseUser != null)
         } catch (e: Exception) {
             Response.error(e)
         }
@@ -71,6 +66,8 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun sendResetPasswordMail(email: String): Response<Boolean> {
         return try {
+            validateEmail(email)
+
             auth.sendPasswordResetEmail(email).await()
             Response.success(true)
         } catch (e: FirebaseAuthInvalidUserException) {
@@ -79,4 +76,5 @@ class FirebaseAuthService : AuthService() {
             Response.error(e)
         }
     }
+
 }
