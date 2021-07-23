@@ -5,9 +5,9 @@ import dev.sertan.android.paper.data.util.Response
 import dev.sertan.android.paper.data.util.Validator
 
 abstract class AuthService {
-    abstract suspend fun register(email: String, password: String): Response<User?>
-    abstract suspend fun currentUser(): Response<User?>
-    abstract suspend fun logIn(email: String, password: String): Response<User?>
+    abstract suspend fun currentUser(): Response<User>
+    abstract suspend fun register(email: String, password: String): Response<Boolean>
+    abstract suspend fun logIn(email: String, password: String): Response<Boolean>
     abstract suspend fun logOut(): Response<Boolean>
     abstract suspend fun deleteAccount(): Response<Boolean>
     abstract suspend fun sendResetPasswordMail(email: String): Response<Boolean>
