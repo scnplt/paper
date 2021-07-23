@@ -4,7 +4,6 @@ import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -31,114 +30,105 @@ class AuthServiceTest {
     @Test
     fun register() {
         runBlocking {
-            val step1 = service.register(email, password)
-            Truth.assertThat(step1.isSuccess()).isTrue()
-            Truth.assertThat(step1.value?.email).isEqualTo(email)
+            val successResult = service.register(email, password)
+            Truth.assertThat(successResult.isSuccess()).isTrue()
 
-            // User has already been created.
-            val step2 = service.register(email, password)
+            val errorResult = service.register(email, password)
             clearExistUser()
-            Truth.assertThat(step2.isError()).isTrue()
-            Truth.assertThat(step2.exception is AuthException.UserAlreadyExist).isTrue()
+            Truth.assertThat(errorResult.isError()).isTrue()
+            Truth.assertThat(errorResult.exception is AuthException.UserAlreadyExist).isTrue()
+
+            val errorValidateEmail = service.register("", password)
+            Truth.assertThat(errorValidateEmail.isError()).isTrue()
+            Truth.assertThat(errorValidateEmail.exception is AuthException.InvalidEmail).isTrue()
+
+            val errorValidatePassword = service.register(email, "")
+            Truth.assertThat(errorValidatePassword.isError()).isTrue()
+            Truth.assertThat(errorValidatePassword.exception is AuthException.InvalidPassword)
+                .isTrue()
         }
     }
 
     @Test
     fun currentUser() {
         runBlocking {
-            // User wasn't created and logged in.
-            val step1 = service.currentUser()
-            clearExistUser()
-            Truth.assertThat(step1.isError()).isTrue()
-            Truth.assertThat(step1.exception is AuthException.UserNotFound).isTrue()
+            val nullResult = service.currentUser()
+            Truth.assertThat(nullResult.isSuccess()).isTrue()
+            Truth.assertThat(nullResult.value).isNull()
 
-            // User was created but not logged in.
-            service.register(email, password)
-            val step2 = service.currentUser()
-            clearExistUser()
-            Truth.assertThat(step2.isError()).isTrue()
-            Truth.assertThat(step2.exception is AuthException.UserNotFound).isTrue()
-
-            // User was created and logged in.
             service.register(email, password)
             service.logIn(email, password)
-            val step3 = service.currentUser()
+            val userResult = service.currentUser()
             clearExistUser()
-            Truth.assertThat(step3.isSuccess()).isTrue()
-            Truth.assertThat(step3.value?.email).isEqualTo(email)
+            Truth.assertThat(userResult.isSuccess()).isTrue()
+            Truth.assertThat(userResult.value).isNotNull()
+            Truth.assertThat(userResult.value?.email).isEqualTo(email)
         }
     }
 
     @Test
     fun logIn() {
         runBlocking {
-            // User wasn't created.
-            val step1 = service.logIn(email, password)
-            Truth.assertThat(step1.isError()).isTrue()
-            Truth.assertThat(step1.exception is AuthException.IncorrectInformation).isTrue()
+            val errorResult = service.logIn(email, password)
+            Truth.assertThat(errorResult.isError()).isTrue()
+            Truth.assertThat(errorResult.exception is AuthException.IncorrectInformation).isTrue()
 
-            // User was created.
             service.register(email, password)
-            val step2 = service.logIn(email, password)
+            val successResult = service.logIn(email, password)
             clearExistUser()
-            Truth.assertThat(step2.isSuccess()).isTrue()
-            Truth.assertThat(step2.value?.email).isEqualTo(email)
+            Truth.assertThat(successResult.isSuccess()).isTrue()
+            Truth.assertThat(successResult.value).isTrue()
         }
     }
 
     @Test
     fun logOut() {
         runBlocking {
-            // Not logged in.
-            val step1 = service.logOut()
-            Truth.assertThat(step1.isError()).isTrue()
-            Truth.assertThat(step1.exception is AuthException.UserNotFound).isTrue()
+            val falseResult = service.logOut()
+            Truth.assertThat(falseResult.isSuccess()).isTrue()
+            Truth.assertThat(falseResult.value).isFalse()
 
-            // Logged in.
             service.register(email, password)
             service.logIn(email, password)
-            val step2 = service.logOut()
+            val trueResult = service.logOut()
             clearExistUser()
-            Truth.assertThat(step2.isSuccess()).isTrue()
+            Truth.assertThat(trueResult.isSuccess()).isTrue()
+            Truth.assertThat(trueResult.value).isTrue()
         }
     }
 
     @Test
     fun deleteAccount() {
         runBlocking {
-            // User wasn't created and logged in.
-            val step1 = service.deleteAccount()
-            Truth.assertThat(step1.isError()).isTrue()
-            Truth.assertThat(step1.exception is AuthException.UserNotFound).isTrue()
+            val falseResult = service.deleteAccount()
+            Truth.assertThat(falseResult.isSuccess()).isTrue()
+            Truth.assertThat(falseResult.value).isFalse()
 
-            // User was created but not signed in.
-            service.register(email, password)
-            val step2 = service.deleteAccount()
-            clearExistUser()
-            Truth.assertThat(step2.isError()).isTrue()
-            Truth.assertThat(step2.exception is AuthException.UserNotFound).isTrue()
-
-            // User was created and logged in.
             service.register(email, password)
             service.logIn(email, password)
-            val step3 = service.deleteAccount()
-            Truth.assertThat(step3.isSuccess()).isTrue()
+            val trueResult = service.deleteAccount()
+            clearExistUser()
+            Truth.assertThat(trueResult.isSuccess()).isTrue()
+            Truth.assertThat(trueResult.value).isTrue()
         }
     }
 
     @Test
     fun sendResetPasswordEmail() {
         runBlocking {
-            // User wasn't created.
-            val step1 = service.sendResetPasswordMail(email)
-            Truth.assertThat(step1.isError()).isTrue()
-            Truth.assertThat(step1.exception is AuthException.UserNotFound).isTrue()
+            val errorResult = service.sendResetPasswordMail(email)
+            Truth.assertThat(errorResult.isError()).isTrue()
+            Truth.assertThat(errorResult.exception is AuthException.UserNotFound).isTrue()
 
-            // User was created.
+            val errorValidateEmail = service.sendResetPasswordMail("")
+            Truth.assertThat(errorValidateEmail.isError()).isTrue()
+            Truth.assertThat(errorValidateEmail.exception is AuthException.InvalidEmail).isTrue()
+
             service.register(email, password)
-            val step2 = service.sendResetPasswordMail(email)
+            val successResult = service.sendResetPasswordMail(email)
             clearExistUser()
-            Truth.assertThat(step2.isSuccess()).isTrue()
+            Truth.assertThat(successResult.isSuccess())
+            Truth.assertThat(successResult.value).isTrue()
         }
     }
 
