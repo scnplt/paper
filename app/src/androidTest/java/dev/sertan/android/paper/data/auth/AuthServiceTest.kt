@@ -37,14 +37,13 @@ internal class AuthServiceTest {
             val successResponse = service.register(email, password)
             clear()
             Truth.assertThat(successResponse.isSuccess()).isTrue()
-            Truth.assertThat(successResponse.value).isTrue()
 
             // Return Response.Error with UserAlreadyExist exception
             service.register(email, password)
-            val userAlreadyExists = service.register(email, password)
+            val userAlreadyExist = service.register(email, password)
             clear()
-            Truth.assertThat(userAlreadyExists.isError()).isTrue()
-            Truth.assertThat(userAlreadyExists.exception is AuthException.UserAlreadyExist).isTrue()
+            Truth.assertThat(userAlreadyExist.isError()).isTrue()
+            Truth.assertThat(userAlreadyExist.exception is AuthException.UserAlreadyExist).isTrue()
 
             // Return Response.Error with InvalidEmail exception
             val invalidEmail = service.register("", password)
@@ -55,7 +54,6 @@ internal class AuthServiceTest {
             val invalidPassword = service.register(email, "")
             Truth.assertThat(invalidPassword.isError()).isTrue()
             Truth.assertThat(invalidPassword.exception is AuthException.InvalidPassword).isTrue()
-
         }
     }
 
@@ -67,7 +65,6 @@ internal class AuthServiceTest {
             val successResponse = service.logIn(email, password)
             clear()
             Truth.assertThat(successResponse.isSuccess()).isTrue()
-            Truth.assertThat(successResponse.value).isTrue()
 
             // Return Response.Error with IncorrectInformation exception
             service.register(email, password)
@@ -100,36 +97,34 @@ internal class AuthServiceTest {
     @Test
     fun logOut() {
         runBlocking {
-            // Return Response.Success with true value
+            // Return Response.Success
             service.register(email, password)
             service.logIn(email, password)
-            val trueValue = service.logOut()
+            val successResponse = service.logOut()
             clear()
-            Truth.assertThat(trueValue.isSuccess()).isTrue()
-            Truth.assertThat(trueValue.value).isTrue()
+            Truth.assertThat(successResponse.isSuccess()).isTrue()
 
-            // Return Response.Success with false value
-            val falseValue = service.logOut()
-            Truth.assertThat(falseValue.isSuccess()).isTrue()
-            Truth.assertThat(falseValue.value).isFalse()
+            // Return Response.Error
+            val errorValue = service.logOut()
+            Truth.assertThat(errorValue.isError()).isTrue()
+            Truth.assertThat(errorValue.exception is AuthException.UserNotFound).isTrue()
         }
     }
 
     @Test
     fun deleteAccount() {
         runBlocking {
-            // Return Response.Success with true value
+            // Return Response.Success
             service.register(email, password)
             service.logIn(email, password)
-            val trueValue = service.deleteAccount()
+            val successResponse = service.deleteAccount()
             clear()
-            Truth.assertThat(trueValue.isSuccess()).isTrue()
-            Truth.assertThat(trueValue.value).isTrue()
+            Truth.assertThat(successResponse.isSuccess()).isTrue()
 
-            // Return Response.Success with false value
-            val falseValue = service.deleteAccount()
-            Truth.assertThat(falseValue.isSuccess()).isTrue()
-            Truth.assertThat(falseValue.value).isFalse()
+            // Return Response.Error
+            val errorValue = service.deleteAccount()
+            Truth.assertThat(errorValue.isError()).isTrue()
+            Truth.assertThat(errorValue.exception is AuthException.UserNotFound).isTrue()
         }
     }
 
@@ -141,7 +136,6 @@ internal class AuthServiceTest {
             val successResponse = service.sendResetPasswordMail(email)
             clear()
             Truth.assertThat(successResponse.isSuccess()).isTrue()
-            Truth.assertThat(successResponse.value).isTrue()
 
             // Return Response.Error with UserNotFound exception
             val userNotFound = service.sendResetPasswordMail(email)

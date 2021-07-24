@@ -29,21 +29,21 @@ class FirestorePaperDbService : DbService<Paper> {
         }
     }
 
-    override suspend fun delete(data: Paper): Response<Boolean> {
+    override suspend fun delete(data: Paper): Response<Unit> {
         return try {
             if (getData(data.uid).isError()) throw DbException.DataNotFound
             collection.document(data.uid).delete().await()
-            Response.success(true)
+            Response.success()
         } catch (e: Exception) {
             Response.error(e)
         }
     }
 
-    override suspend fun update(data: Paper): Response<Boolean> {
+    override suspend fun update(data: Paper): Response<Unit> {
         return try {
             if (getData(data.uid).isError()) throw DbException.DataNotFound
             collection.document(data.uid).set(data).await()
-            Response.success(true)
+            Response.success()
         } catch (e: Exception) {
             Response.error(e)
         }
