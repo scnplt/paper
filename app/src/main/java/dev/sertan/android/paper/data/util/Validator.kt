@@ -1,8 +1,13 @@
 package dev.sertan.android.paper.data.util
 
-import android.util.Patterns
+import androidx.core.util.PatternsCompat
 
 object Validator {
-    fun validateEmail(email: String): Boolean = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    fun validatePassword(password: String): Boolean = password.length > 7
+    fun validateEmail(email: String): Boolean {
+        return PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    fun validatePassword(password: String): Boolean {
+        return password.length > 7
+    }
 }
