@@ -18,22 +18,22 @@ class FakePaperDbService : DbService<Paper> {
         }
     }
 
-    override suspend fun delete(data: Paper): Response<Boolean> {
+    override suspend fun delete(data: Paper): Response<Unit> {
         return try {
             val result = papers.remove(data)
             if (!result) throw DbException.DataNotFound
-            Response.success(true)
+            Response.success()
         } catch (e: Exception) {
             Response.error(e)
         }
     }
 
-    override suspend fun update(data: Paper): Response<Boolean> {
+    override suspend fun update(data: Paper): Response<Unit> {
         return try {
             val index = papers.indexOfFirst { it.uid == data.uid }
             if (index == -1) throw DbException.DataNotFound
             papers[index] = data
-            Response.success(true)
+            Response.success()
         } catch (e: Exception) {
             Response.error(e)
         }
