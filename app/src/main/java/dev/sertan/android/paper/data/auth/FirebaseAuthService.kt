@@ -1,6 +1,7 @@
 package dev.sertan.android.paper.data.auth
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dev.sertan.android.paper.data.model.User
@@ -12,7 +13,8 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun currentUser(): Response<User> {
         return try {
-            val user = auth.currentUser?.let { User(it.uid, it.email ?: "") }
+            val firebaseUser = auth.currentUser ?: throw AuthException.UserNotFound
+            val user = User(firebaseUser.uid, firebaseUser.email ?: "")
             Response.success(user)
         } catch (e: Exception) {
             Response.error(e)
@@ -36,10 +38,14 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun logIn(email: String, password: String): Response<Boolean> {
         return try {
+            validateEmail(email)
+            validatePassword(password)
             val result = auth.signInWithEmailAndPassword(email, password).await()
             if (result.user == null) throw AuthException.IncorrectInformation
             Response.success(true)
         } catch (e: FirebaseAuthInvalidUserException) {
+            Response.error(AuthException.IncorrectInformation)
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
             Response.error(AuthException.IncorrectInformation)
         } catch (e: Exception) {
             Response.error(e)
