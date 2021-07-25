@@ -40,10 +40,10 @@ internal class AuthServiceTest {
 
             // Return Response.Error with UserAlreadyExist exception
             service.register(email, password)
-            val userAlreadyExist = service.register(email, password)
+            val userAlreadyExists = service.register(email, password)
             clear()
-            Truth.assertThat(userAlreadyExist.isError()).isTrue()
-            Truth.assertThat(userAlreadyExist.exception is AuthException.UserAlreadyExist).isTrue()
+            Truth.assertThat(userAlreadyExists.isError()).isTrue()
+            Truth.assertThat(userAlreadyExists.exception is AuthException.UserAlreadyExists).isTrue()
 
             // Return Response.Error with InvalidEmail exception
             val invalidEmail = service.register("", password)

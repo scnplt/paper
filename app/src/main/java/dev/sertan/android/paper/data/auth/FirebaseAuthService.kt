@@ -28,7 +28,7 @@ class FirebaseAuthService : AuthService() {
             auth.createUserWithEmailAndPassword(email, password).await()
             Response.success()
         } catch (e: FirebaseAuthUserCollisionException) {
-            Response.error(AuthException.UserAlreadyExist)
+            Response.error(AuthException.UserAlreadyExists)
         } catch (e: Exception) {
             Response.error(e)
         }
