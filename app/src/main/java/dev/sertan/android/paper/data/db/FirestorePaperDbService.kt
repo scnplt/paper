@@ -5,6 +5,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import dev.sertan.android.paper.data.model.Paper
+import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -31,7 +32,7 @@ class FirestorePaperDbService : DbService<Paper> {
 
     override suspend fun delete(data: Paper): Response<Unit> {
         return try {
-            if (getData(data.uid).isError()) throw DbException.DataNotFound
+            if (getData(data.uid).isError()) throw PaperException.DataNotFound
             collection.document(data.uid).delete().await()
             Response.success()
         } catch (e: Exception) {
@@ -41,7 +42,7 @@ class FirestorePaperDbService : DbService<Paper> {
 
     override suspend fun update(data: Paper): Response<Unit> {
         return try {
-            if (getData(data.uid).isError()) throw DbException.DataNotFound
+            if (getData(data.uid).isError()) throw PaperException.DataNotFound
             collection.document(data.uid).set(data).await()
             Response.success()
         } catch (e: Exception) {
@@ -52,7 +53,7 @@ class FirestorePaperDbService : DbService<Paper> {
     override suspend fun getData(uid: String): Response<Paper> {
         return try {
             val document = collection.document(uid).get().await()
-            val paper = document.toObject<Paper>() ?: throw DbException.DataNotFound
+            val paper = document.toObject<Paper>() ?: throw PaperException.DataNotFound
             Response.success(paper)
         } catch (e: Exception) {
             Response.error(e)
@@ -72,7 +73,7 @@ class FirestorePaperDbService : DbService<Paper> {
 
             awaitClose { listenerRegistration.remove() }
         }.catch {
-            emit(Response.error(DbException.DataNotFound))
+            emit(Response.error(PaperException.DataNotFound))
         }
     }
 

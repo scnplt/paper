@@ -1,14 +1,13 @@
 package dev.sertan.android.paper.data.util
 
-open class Response<out T> private constructor(
+sealed class Response<out T> private constructor(
     val value: T? = null,
     val exception: Exception? = null
 ) {
-
     companion object {
         fun idle(): Idle = Idle
         fun loading(): Loading = Loading
-        fun error(e: Exception = Exception()): Error = Error(e)
+        fun error(e: Exception = PaperException.Default): Error = Error(e)
         fun <T> success(data: T? = null): Success<T> = Success(data)
     }
 
@@ -19,6 +18,6 @@ open class Response<out T> private constructor(
 
     object Idle : Response<Nothing>()
     object Loading : Response<Nothing>()
-    data class Error(val e: Exception) : Response<Nothing>(exception = e)
     data class Success<T>(val data: T?) : Response<T>(data)
+    data class Error(val e: Exception) : Response<Nothing>(exception = e)
 }

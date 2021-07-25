@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Paper</string>
+
+    <!-- Exception messages -->
+    <string name="default_exception_message">Something went wrong!</string>
+    <string name="invalid_email_message">Invalid email address!</string>
+    <string name="invalid_password_message">Password must be at least 8 characters long.</string>
+    <string name="user_already_exists_message">User already exists!</string>
+    <string name="incorrect_information_message">The password or email address you entered is incorrect!</string>
+    <string name="user_not_found_message">User not found!</string>
+    <string name="data_not_found_message">Data not found!</string>
+
 </resources>
