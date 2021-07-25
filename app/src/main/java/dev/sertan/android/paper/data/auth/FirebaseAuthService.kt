@@ -5,15 +5,16 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dev.sertan.android.paper.data.model.User
+import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
 import kotlinx.coroutines.tasks.await
 
-class FirebaseAuthService : AuthService() {
+class FirebaseAuthService : AuthService {
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     override suspend fun currentUser(): Response<User> {
         return try {
-            val firebaseUser = auth.currentUser ?: throw AuthException.UserNotFound
+            val firebaseUser = auth.currentUser ?: throw PaperException.UserNotFound
             val user = User(firebaseUser.uid, firebaseUser.email ?: "")
             Response.success(user)
         } catch (e: Exception) {
@@ -23,12 +24,10 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun register(email: String, password: String): Response<Unit> {
         return try {
-            validateEmail(email)
-            validatePassword(password)
             auth.createUserWithEmailAndPassword(email, password).await()
             Response.success()
         } catch (e: FirebaseAuthUserCollisionException) {
-            Response.error(AuthException.UserAlreadyExists)
+            Response.error(PaperException.UserAlreadyExists)
         } catch (e: Exception) {
             Response.error(e)
         }
@@ -36,15 +35,13 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun logIn(email: String, password: String): Response<Unit> {
         return try {
-            validateEmail(email)
-            validatePassword(password)
             val result = auth.signInWithEmailAndPassword(email, password).await()
-            if (result.user == null) throw AuthException.IncorrectInformation
+            if (result.user == null) throw PaperException.IncorrectInformation
             Response.success()
         } catch (e: FirebaseAuthInvalidUserException) {
-            Response.error(AuthException.IncorrectInformation)
+            Response.error(PaperException.IncorrectInformation)
         } catch (e: FirebaseAuthInvalidCredentialsException) {
-            Response.error(AuthException.IncorrectInformation)
+            Response.error(PaperException.IncorrectInformation)
         } catch (e: Exception) {
             Response.error(e)
         }
@@ -52,7 +49,7 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun logOut(): Response<Unit> {
         return try {
-            auth.currentUser ?: throw AuthException.UserNotFound
+            auth.currentUser ?: throw PaperException.UserNotFound
             auth.signOut()
             Response.success()
         } catch (e: Exception) {
@@ -62,7 +59,7 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun deleteAccount(): Response<Unit> {
         return try {
-            val currentUser = auth.currentUser ?: throw AuthException.UserNotFound
+            val currentUser = auth.currentUser ?: throw PaperException.UserNotFound
             currentUser.delete().await()
             Response.success()
         } catch (e: Exception) {
@@ -72,11 +69,10 @@ class FirebaseAuthService : AuthService() {
 
     override suspend fun sendResetPasswordMail(email: String): Response<Unit> {
         return try {
-            validateEmail(email)
             auth.sendPasswordResetEmail(email).await()
             Response.success()
         } catch (e: FirebaseAuthInvalidUserException) {
-            Response.error(AuthException.UserNotFound)
+            Response.error(PaperException.UserNotFound)
         } catch (e: Exception) {
             Response.error(e)
         }

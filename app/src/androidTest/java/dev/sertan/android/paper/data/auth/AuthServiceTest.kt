@@ -2,6 +2,7 @@ package dev.sertan.android.paper.data.auth
 
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
+import dev.sertan.android.paper.data.util.PaperException
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
@@ -26,7 +27,7 @@ internal class AuthServiceTest {
             // Return Response.Error with UserNotFound exception
             val errorResponse = service.currentUser()
             Truth.assertThat(errorResponse.isError()).isTrue()
-            Truth.assertThat(errorResponse.exception is AuthException.UserNotFound).isTrue()
+            Truth.assertThat(errorResponse.exception is PaperException.UserNotFound).isTrue()
         }
     }
 
@@ -43,17 +44,8 @@ internal class AuthServiceTest {
             val userAlreadyExists = service.register(email, password)
             clear()
             Truth.assertThat(userAlreadyExists.isError()).isTrue()
-            Truth.assertThat(userAlreadyExists.exception is AuthException.UserAlreadyExists).isTrue()
-
-            // Return Response.Error with InvalidEmail exception
-            val invalidEmail = service.register("", password)
-            Truth.assertThat(invalidEmail.isError()).isTrue()
-            Truth.assertThat(invalidEmail.exception is AuthException.InvalidEmail).isTrue()
-
-            // Return Response.Error with InvalidPassword exception
-            val invalidPassword = service.register(email, "")
-            Truth.assertThat(invalidPassword.isError()).isTrue()
-            Truth.assertThat(invalidPassword.exception is AuthException.InvalidPassword).isTrue()
+            Truth.assertThat(userAlreadyExists.exception is PaperException.UserAlreadyExists)
+                .isTrue()
         }
     }
 
@@ -71,7 +63,7 @@ internal class AuthServiceTest {
             val incorrectInformation1 = service.logIn(email, "00000000")
             clear()
             Truth.assertThat(incorrectInformation1.isError()).isTrue()
-            Truth.assertThat(incorrectInformation1.exception is AuthException.IncorrectInformation)
+            Truth.assertThat(incorrectInformation1.exception is PaperException.IncorrectInformation)
                 .isTrue()
 
             // Return Response.Error with IncorrectInformation exception
@@ -79,18 +71,8 @@ internal class AuthServiceTest {
             val incorrectInformation2 = service.logIn("aaaa@test.com", password)
             clear()
             Truth.assertThat(incorrectInformation2.isError()).isTrue()
-            Truth.assertThat(incorrectInformation2.exception is AuthException.IncorrectInformation)
+            Truth.assertThat(incorrectInformation2.exception is PaperException.IncorrectInformation)
                 .isTrue()
-
-            // Return Response.Error with InvalidEmail exception
-            val invalidEmail = service.logIn("", password)
-            Truth.assertThat(invalidEmail.isError()).isTrue()
-            Truth.assertThat(invalidEmail.exception is AuthException.InvalidEmail).isTrue()
-
-            // Return Response.Error with InvalidPassword exception
-            val invalidPassword = service.logIn(email, "")
-            Truth.assertThat(invalidPassword.isError()).isTrue()
-            Truth.assertThat(invalidPassword.exception is AuthException.InvalidPassword).isTrue()
         }
     }
 
@@ -107,7 +89,7 @@ internal class AuthServiceTest {
             // Return Response.Error
             val errorValue = service.logOut()
             Truth.assertThat(errorValue.isError()).isTrue()
-            Truth.assertThat(errorValue.exception is AuthException.UserNotFound).isTrue()
+            Truth.assertThat(errorValue.exception is PaperException.UserNotFound).isTrue()
         }
     }
 
@@ -124,7 +106,7 @@ internal class AuthServiceTest {
             // Return Response.Error
             val errorValue = service.deleteAccount()
             Truth.assertThat(errorValue.isError()).isTrue()
-            Truth.assertThat(errorValue.exception is AuthException.UserNotFound).isTrue()
+            Truth.assertThat(errorValue.exception is PaperException.UserNotFound).isTrue()
         }
     }
 
@@ -140,38 +122,8 @@ internal class AuthServiceTest {
             // Return Response.Error with UserNotFound exception
             val userNotFound = service.sendResetPasswordMail(email)
             Truth.assertThat(userNotFound.isError()).isTrue()
-            Truth.assertThat(userNotFound.exception is AuthException.UserNotFound).isTrue()
-
-            // Return Response.Error with InvalidEmail exception
-            val invalidEmail = service.sendResetPasswordMail("")
-            Truth.assertThat(invalidEmail.isError()).isTrue()
-            Truth.assertThat(invalidEmail.exception is AuthException.InvalidEmail).isTrue()
+            Truth.assertThat(userNotFound.exception is PaperException.UserNotFound).isTrue()
         }
-    }
-
-    @Test
-    fun validateEmail() {
-        // Valid email address
-        val isInvalidFalse =
-            isException<AuthException.InvalidEmail> { service.validateEmail(email) }
-        Truth.assertThat(isInvalidFalse).isFalse()
-
-        // Invalid email address
-        val isInvalidTrue = isException<AuthException.InvalidEmail> { service.validateEmail("") }
-        Truth.assertThat(isInvalidTrue).isTrue()
-    }
-
-    @Test
-    fun validatePassword() {
-        // Valid password
-        val isInvalidFalse =
-            isException<AuthException.InvalidPassword> { service.validatePassword(password) }
-        Truth.assertThat(isInvalidFalse).isFalse()
-
-        // Invalid password
-        val isInvalidTrue =
-            isException<AuthException.InvalidPassword> { service.validatePassword("") }
-        Truth.assertThat(isInvalidTrue).isTrue()
     }
 
     private fun clear() {
@@ -179,15 +131,6 @@ internal class AuthServiceTest {
             service.logIn(email, password)
             service.deleteAccount()
             service.logOut()
-        }
-    }
-
-    private inline fun <reified T> isException(block: () -> Unit): Boolean {
-        return try {
-            block.invoke()
-            false
-        } catch (e: Exception) {
-            e is T
         }
     }
 

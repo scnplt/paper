@@ -3,6 +3,7 @@ package dev.sertan.android.paper.data.db
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
 import dev.sertan.android.paper.data.model.Paper
+import dev.sertan.android.paper.data.util.PaperException
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -31,7 +32,7 @@ internal class PaperDbServiceTest {
             // Return Response.Error with DataNotFound exception
             val errorResponse = service.delete(paper)
             Truth.assertThat(errorResponse.isError()).isTrue()
-            Truth.assertThat(errorResponse.exception is DbException.DataNotFound).isTrue()
+            Truth.assertThat(errorResponse.exception is PaperException.DataNotFound).isTrue()
 
             // Return Response.Success
             service.create(paper)
@@ -46,7 +47,7 @@ internal class PaperDbServiceTest {
             // Return Response.Error with DataNotFound exception
             val errorResponse = service.update(paper)
             Truth.assertThat(errorResponse.isError()).isTrue()
-            Truth.assertThat(errorResponse.exception is DbException.DataNotFound).isTrue()
+            Truth.assertThat(errorResponse.exception is PaperException.DataNotFound).isTrue()
 
             // Return Response.Success
             service.create(paper)
@@ -62,7 +63,7 @@ internal class PaperDbServiceTest {
             // Return Response.Error with DataNotFound exception
             val errorResponse = service.getData(paper.uid)
             Truth.assertThat(errorResponse.isError()).isTrue()
-            Truth.assertThat(errorResponse.exception is DbException.DataNotFound).isTrue()
+            Truth.assertThat(errorResponse.exception is PaperException.DataNotFound).isTrue()
 
             // Return Response.Success
             service.create(paper)
@@ -79,7 +80,7 @@ internal class PaperDbServiceTest {
             // Return Response.Error with DataNotFound exception
             val errorResponse = service.getAllData(userUid).first()
             Truth.assertThat(errorResponse.isError()).isTrue()
-            Truth.assertThat(errorResponse.exception is DbException.DataNotFound).isTrue()
+            Truth.assertThat(errorResponse.exception is PaperException.DataNotFound).isTrue()
 
             // Return Response.Success
             val secondPaper = Paper(userUid)
