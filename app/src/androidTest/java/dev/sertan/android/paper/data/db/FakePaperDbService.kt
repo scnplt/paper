@@ -1,6 +1,7 @@
 package dev.sertan.android.paper.data.db
 
 import dev.sertan.android.paper.data.model.Paper
+import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,7 +22,7 @@ class FakePaperDbService : DbService<Paper> {
     override suspend fun delete(data: Paper): Response<Unit> {
         return try {
             val result = papers.remove(data)
-            if (!result) throw DbException.DataNotFound
+            if (!result) throw PaperException.DataNotFound
             Response.success()
         } catch (e: Exception) {
             Response.error(e)
@@ -31,7 +32,7 @@ class FakePaperDbService : DbService<Paper> {
     override suspend fun update(data: Paper): Response<Unit> {
         return try {
             val index = papers.indexOfFirst { it.uid == data.uid }
-            if (index == -1) throw DbException.DataNotFound
+            if (index == -1) throw PaperException.DataNotFound
             papers[index] = data
             Response.success()
         } catch (e: Exception) {
@@ -42,7 +43,7 @@ class FakePaperDbService : DbService<Paper> {
     override suspend fun getData(uid: String): Response<Paper> {
         return try {
             val index = papers.indexOfFirst { it.uid == uid }
-            if (index == -1) throw DbException.DataNotFound
+            if (index == -1) throw PaperException.DataNotFound
             Response.success(papers[index])
         } catch (e: Exception) {
             Response.error(e)
@@ -52,10 +53,10 @@ class FakePaperDbService : DbService<Paper> {
     override fun getAllData(userUid: String): Flow<Response<List<Paper>>> {
         return flow<Response<List<Paper>>> {
             val data = papers.filter { it.userUid == userUid }
-            if (data.isEmpty()) throw DbException.DataNotFound
+            if (data.isEmpty()) throw PaperException.DataNotFound
             emit(Response.success(data))
         }.catch {
-            emit(Response.error(DbException.DataNotFound))
+            emit(Response.error(PaperException.DataNotFound))
         }
     }
 
