@@ -20,7 +20,7 @@ class FakeAuthService : AuthService() {
         return try {
             validateEmail(email)
             validatePassword(password)
-            if (email == user?.email) throw AuthException.UserAlreadyExist
+            if (email == user?.email) throw AuthException.UserAlreadyExists
             user = User(email = email, password = password)
             Response.success()
         } catch (e: Exception) {
