@@ -7,11 +7,13 @@ import com.google.firebase.ktx.Firebase
 import dev.sertan.android.paper.data.model.Paper
 import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 
 class FirestorePaperDbService : DbService<Paper> {
@@ -74,7 +76,7 @@ class FirestorePaperDbService : DbService<Paper> {
             awaitClose { listenerRegistration.remove() }
         }.catch {
             emit(Response.error(PaperException.DataNotFound))
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
 }
