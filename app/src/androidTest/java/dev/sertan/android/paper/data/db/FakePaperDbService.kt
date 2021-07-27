@@ -3,9 +3,11 @@ package dev.sertan.android.paper.data.db
 import dev.sertan.android.paper.data.model.Paper
 import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class FakePaperDbService : DbService<Paper> {
     private val papers = mutableListOf<Paper>()
@@ -51,13 +53,14 @@ class FakePaperDbService : DbService<Paper> {
     }
 
     override fun getAllData(userUid: String): Flow<Response<List<Paper>>> {
-        return flow<Response<List<Paper>>> {
+        return flow {
+            emit(Response.loading())
             val data = papers.filter { it.userUid == userUid }
             if (data.isEmpty()) throw PaperException.DataNotFound
             emit(Response.success(data))
         }.catch {
             emit(Response.error(PaperException.DataNotFound))
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
 }
