@@ -4,6 +4,7 @@ import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
 import dev.sertan.android.paper.data.auth.FakeAuthService
 import dev.sertan.android.paper.data.util.PaperException
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
@@ -18,8 +19,8 @@ class UserRepoTest {
     fun currentUser() {
         runBlocking {
             // Return Response.Success
-            repo.register(email, password)
-            repo.logIn(email, password)
+            repo.register(email, password).last()
+            repo.logIn(email, password).last()
             val successResponse = repo.currentUser.value
             clear()
             Truth.assertThat(successResponse.isSuccess()).isTrue()
@@ -31,18 +32,18 @@ class UserRepoTest {
             Truth.assertThat(userNotFound.exception is PaperException.UserNotFound).isTrue()
 
             // Return Response.Error with UserNotFound exception after log out
-            repo.register(email, password)
-            repo.logIn(email, password)
-            repo.logOut()
+            repo.register(email, password).last()
+            repo.logIn(email, password).last()
+            repo.logOut().last()
             val afterLogOutResponse = repo.currentUser.value
             clear()
             Truth.assertThat(afterLogOutResponse.isError()).isTrue()
             Truth.assertThat(afterLogOutResponse.exception is PaperException.UserNotFound).isTrue()
 
             // Return Response.Error with UserNotFound exception after delete account
-            repo.register(email, password)
-            repo.logIn(email, password)
-            repo.deleteAccount()
+            repo.register(email, password).last()
+            repo.logIn(email, password).last()
+            repo.deleteAccount().last()
             val afterDeleteAccount = repo.currentUser.value
             Truth.assertThat(afterDeleteAccount.isError()).isTrue()
             Truth.assertThat(afterDeleteAccount.exception is PaperException.UserNotFound).isTrue()
@@ -53,24 +54,24 @@ class UserRepoTest {
     fun register() {
         runBlocking {
             // Return Response.Success
-            val successResponse = repo.register(email, password)
+            val successResponse = repo.register(email, password).last()
             clear()
             Truth.assertThat(successResponse.isSuccess()).isTrue()
 
             // Return Response.Error with InvalidEmailAddress exception
-            val invalidEmailAddress = repo.register("", password)
+            val invalidEmailAddress = repo.register("", password).last()
             Truth.assertThat(invalidEmailAddress.isError()).isTrue()
             Truth.assertThat(invalidEmailAddress.exception is PaperException.InvalidEmailAddress)
                 .isTrue()
 
             // Return Response.Error with InvalidPassword exception
-            val invalidPassword = repo.register(email, "")
+            val invalidPassword = repo.register(email, "").last()
             Truth.assertThat(invalidPassword.isError()).isTrue()
             Truth.assertThat(invalidPassword.exception is PaperException.InvalidPassword).isTrue()
 
             // Return Response.Error with UserAlreadyExists exception
-            repo.register(email, password)
-            val userAlreadyExists = repo.register(email, password)
+            repo.register(email, password).last()
+            val userAlreadyExists = repo.register(email, password).last()
             Truth.assertThat(userAlreadyExists.isError()).isTrue()
             Truth.assertThat(userAlreadyExists.exception is PaperException.UserAlreadyExists)
                 .isTrue()
@@ -81,35 +82,35 @@ class UserRepoTest {
     fun logIn() {
         runBlocking {
             // Return Response.Success
-            repo.register(email, password)
-            val successResponse = repo.logIn(email, password)
+            repo.register(email, password).last()
+            val successResponse = repo.logIn(email, password).last()
             clear()
             Truth.assertThat(successResponse.isSuccess()).isTrue()
 
             // Return Response.Error with IncorrectInformation exception
-            repo.register(email, password)
-            val incorrectInformation1 = repo.logIn("test1@test.com", password)
+            repo.register(email, password).last()
+            val incorrectInformation1 = repo.logIn("test1@test.com", password).last()
             clear()
             Truth.assertThat(incorrectInformation1.isError()).isTrue()
             Truth.assertThat(incorrectInformation1.exception is PaperException.IncorrectInformation)
                 .isTrue()
 
             // Return Response.Error with IncorrectInformation exception
-            repo.register(email, password)
-            val incorrectInformation2 = repo.logIn(email, "00000000")
+            repo.register(email, password).last()
+            val incorrectInformation2 = repo.logIn(email, "00000000").last()
             clear()
             Truth.assertThat(incorrectInformation2.isError()).isTrue()
             Truth.assertThat(incorrectInformation2.exception is PaperException.IncorrectInformation)
                 .isTrue()
 
             // Return Response.Error with InvalidEmailAddress exception
-            val invalidEmailAddress = repo.logIn("", password)
+            val invalidEmailAddress = repo.logIn("", password).last()
             Truth.assertThat(invalidEmailAddress.isError()).isTrue()
             Truth.assertThat(invalidEmailAddress.exception is PaperException.InvalidEmailAddress)
                 .isTrue()
 
             // Return Response.Error with InvalidPassword exception
-            val invalidPassword = repo.logIn(email, "")
+            val invalidPassword = repo.logIn(email, "").last()
             Truth.assertThat(invalidPassword.isError()).isTrue()
             Truth.assertThat(invalidPassword.exception is PaperException.InvalidPassword).isTrue()
         }
@@ -119,14 +120,14 @@ class UserRepoTest {
     fun logOut() {
         runBlocking {
             // Return Response.Success
-            repo.register(email, password)
-            repo.logIn(email, password)
-            val successResponse = repo.logOut()
+            repo.register(email, password).last()
+            repo.logIn(email, password).last()
+            val successResponse = repo.logOut().last()
             clear()
             Truth.assertThat(successResponse.isSuccess()).isTrue()
 
             // Return Response.Error with UserNotFound exception
-            val userNotFound = repo.logOut()
+            val userNotFound = repo.logOut().last()
             Truth.assertThat(userNotFound.isError()).isTrue()
             Truth.assertThat(userNotFound.exception is PaperException.UserNotFound).isTrue()
         }
@@ -136,14 +137,14 @@ class UserRepoTest {
     fun deleteAccount() {
         runBlocking {
             // Return Response.Success
-            repo.register(email, password)
-            repo.logIn(email, password)
-            val successResponse = repo.deleteAccount()
+            repo.register(email, password).last()
+            repo.logIn(email, password).last()
+            val successResponse = repo.deleteAccount().last()
             clear()
             Truth.assertThat(successResponse.isSuccess()).isTrue()
 
             // Return Response.Error with UserNotFound exception
-            val userNotFound = repo.deleteAccount()
+            val userNotFound = repo.deleteAccount().last()
             Truth.assertThat(userNotFound.isError()).isTrue()
             Truth.assertThat(userNotFound.exception is PaperException.UserNotFound).isTrue()
         }
@@ -153,19 +154,19 @@ class UserRepoTest {
     fun sendResetPasswordMail() {
         runBlocking {
             // Return Response.Success
-            repo.register(email, password)
-            val successResponse = repo.sendResetPasswordMail(email)
+            repo.register(email, password).last()
+            val successResponse = repo.sendResetPasswordMail(email).last()
             clear()
             Truth.assertThat(successResponse.isSuccess()).isTrue()
 
             // Return Response.Error with InvalidEmailAddress exception
-            val invalidEmailAddress = repo.sendResetPasswordMail("")
+            val invalidEmailAddress = repo.sendResetPasswordMail("").last()
             Truth.assertThat(invalidEmailAddress.isError()).isTrue()
             Truth.assertThat(invalidEmailAddress.exception is PaperException.InvalidEmailAddress)
                 .isTrue()
 
             // Return Response.Error with UserNotFound exception
-            val userNotFound = repo.sendResetPasswordMail("test1@test.com")
+            val userNotFound = repo.sendResetPasswordMail("test1@test.com").last()
             Truth.assertThat(userNotFound.isError()).isTrue()
             Truth.assertThat(userNotFound.exception is PaperException.UserNotFound).isTrue()
         }
@@ -173,8 +174,8 @@ class UserRepoTest {
 
     private fun clear() {
         runBlocking {
-            repo.logIn(email, password)
-            repo.deleteAccount()
+            repo.logIn(email, password).last()
+            repo.deleteAccount().last()
         }
     }
 }

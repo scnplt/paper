@@ -9,8 +9,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 @Singleton
@@ -19,49 +23,69 @@ class UserRepo @Inject constructor(private val authService: AuthService) {
     val currentUser: StateFlow<Response<User>> get() = _currentUser
 
     init {
-        CoroutineScope(Dispatchers.Default).launch { refreshCurrentUser() }
+        CoroutineScope(Dispatchers.Default).launch { refreshUser() }
     }
 
-    suspend fun register(email: String, password: String): Response<Unit> {
-        return try {
+    private suspend fun refreshUser() {
+        _currentUser.emit(Response.loading())
+        val response = authService.currentUser()
+        _currentUser.emit(response)
+    }
+
+    fun register(email: String, password: String): Flow<Response<Unit>> {
+        return flow {
+            emit(Response.loading())
             validateEmailAddress(email)
             validatePassword(password)
-            authService.register(email, password)
-        } catch (e: Exception) {
-            Response.error(e)
-        }
+            val response = authService.register(email, password)
+            authService.logOut()
+            emit(response)
+        }.catch { e ->
+            emit(Response.error(e as Exception))
+        }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun logIn(email: String, password: String): Response<Unit> {
-        return try {
+    fun logIn(email: String, password: String): Flow<Response<Unit>> {
+        return flow {
+            emit(Response.loading())
             validateEmailAddress(email)
             validatePassword(password)
-            authService.logIn(email, password).also { refreshCurrentUser() }
-        } catch (e: Exception) {
-            Response.error(e)
-        }
+            val response = authService.logIn(email, password)
+            refreshUser()
+            emit(response)
+        }.catch { e ->
+            emit(Response.error(e as Exception))
+        }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun logOut(): Response<Unit> {
-        return authService.logOut().also { refreshCurrentUser() }
+    fun logOut(): Flow<Response<Unit>> {
+        return flow {
+            emit(Response.loading())
+            val response = authService.logOut()
+            refreshUser()
+            emit(response)
+        }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun deleteAccount(): Response<Unit> {
-        return authService.deleteAccount().also { logOut() }
+    fun deleteAccount(): Flow<Response<Unit>> {
+        return flow {
+            emit(Response.loading())
+            val response = authService.deleteAccount()
+            authService.logOut()
+            refreshUser()
+            emit(response)
+        }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun sendResetPasswordMail(email: String): Response<Unit> {
-        return try {
+    fun sendResetPasswordMail(email: String): Flow<Response<Unit>> {
+        return flow {
+            emit(Response.loading())
             validateEmailAddress(email)
-            authService.sendResetPasswordMail(email)
-        } catch (e: Exception) {
-            Response.error(e)
-        }
-    }
-
-    private suspend fun refreshCurrentUser() {
-        val user = authService.currentUser()
-        _currentUser.emit(user)
+            val response = authService.sendResetPasswordMail(email)
+            emit(response)
+        }.catch { e ->
+            emit(Response.error(e as Exception))
+        }.flowOn(Dispatchers.IO)
     }
 
     private fun validateEmailAddress(email: String) {
