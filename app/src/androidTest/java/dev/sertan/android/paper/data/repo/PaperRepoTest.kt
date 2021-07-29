@@ -2,20 +2,34 @@ package dev.sertan.android.paper.data.repo
 
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
-import dev.sertan.android.paper.data.db.FakePaperDbService
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import dev.sertan.android.paper.data.model.Paper
 import dev.sertan.android.paper.data.util.PaperException
+import javax.inject.Inject
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @SmallTest
-class PaperRepoTest {
-    private val repo: PaperRepo = PaperRepo(FakePaperDbService())
+@HiltAndroidTest
+internal class PaperRepoTest {
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var repo: PaperRepo
 
     private val userUid = "1"
     private val paper = Paper(userUid)
+
+    @Before
+    fun setup() {
+        hiltRule.inject()
+    }
 
     @Test
     fun create() {
