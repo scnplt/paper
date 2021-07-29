@@ -65,7 +65,9 @@ class FirestorePaperDbService : DbService<Paper> {
 
     @ExperimentalCoroutinesApi
     override fun getAllData(userUid: String): Flow<Response<List<Paper>>> {
-        return callbackFlow<Response<List<Paper>>> {
+        return callbackFlow {
+            trySend(Response.loading())
+
             val listenerRegistration = collection
                 .whereEqualTo("userUid", userUid)
                 .addSnapshotListener { value, error ->

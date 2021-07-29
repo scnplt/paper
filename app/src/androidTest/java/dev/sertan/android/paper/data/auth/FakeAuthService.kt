@@ -4,7 +4,7 @@ import dev.sertan.android.paper.data.model.User
 import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
 
-class FakeAuthService : AuthService {
+internal class FakeAuthService : AuthService {
     private var user: User? = null
     private var currentUser: User? = null
 

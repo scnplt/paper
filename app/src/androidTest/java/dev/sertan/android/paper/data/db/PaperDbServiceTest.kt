@@ -2,18 +2,34 @@ package dev.sertan.android.paper.data.db
 
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import dev.sertan.android.paper.data.model.Paper
 import dev.sertan.android.paper.data.util.PaperException
-import kotlinx.coroutines.flow.first
+import javax.inject.Inject
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @SmallTest
+@HiltAndroidTest
 internal class PaperDbServiceTest {
-    private val service: DbService<Paper> = FakePaperDbService()
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var service: DbService<Paper>
 
     private val userUid = "1"
     private val paper = Paper(userUid)
+
+    @Before
+    fun setup() {
+        hiltRule.inject()
+    }
 
     @Test
     fun create() {
@@ -78,7 +94,7 @@ internal class PaperDbServiceTest {
     fun getAllData() {
         runBlocking {
             // Return Response.Error with DataNotFound exception
-            val errorResponse = service.getAllData(userUid).first()
+            val errorResponse = service.getAllData(userUid).take(2).last()
             Truth.assertThat(errorResponse.isError()).isTrue()
             Truth.assertThat(errorResponse.exception is PaperException.DataNotFound).isTrue()
 
@@ -86,7 +102,7 @@ internal class PaperDbServiceTest {
             val secondPaper = Paper(userUid)
             service.create(paper)
             service.create(secondPaper)
-            val successResponse = service.getAllData(userUid).first()
+            val successResponse = service.getAllData(userUid).take(2).last()
             service.delete(paper)
             service.delete(secondPaper)
             Truth.assertThat(successResponse.isSuccess()).isTrue()
