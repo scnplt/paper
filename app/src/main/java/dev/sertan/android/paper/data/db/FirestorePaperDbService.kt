@@ -8,6 +8,7 @@ import dev.sertan.android.paper.data.model.Paper
 import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -62,8 +63,11 @@ class FirestorePaperDbService : DbService<Paper> {
         }
     }
 
+    @ExperimentalCoroutinesApi
     override fun getAllData(userUid: String): Flow<Response<List<Paper>>> {
-        return callbackFlow<Response<List<Paper>>> {
+        return callbackFlow {
+            trySend(Response.loading())
+
             val listenerRegistration = collection
                 .whereEqualTo("userUid", userUid)
                 .addSnapshotListener { value, error ->
