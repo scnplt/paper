@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class FakePaperDbService : DbService<Paper> {
+internal class FakePaperDbService : DbService<Paper> {
     private val papers = mutableListOf<Paper>()
 
     override suspend fun create(data: Paper): Response<Paper> {
@@ -23,8 +23,9 @@ class FakePaperDbService : DbService<Paper> {
 
     override suspend fun delete(data: Paper): Response<Unit> {
         return try {
-            val result = papers.remove(data)
-            if (!result) throw PaperException.DataNotFound
+            val index = papers.indexOfFirst { it.uid == data.uid }
+            if (index == -1) throw PaperException.DataNotFound
+            papers.removeAt(index)
             Response.success()
         } catch (e: Exception) {
             Response.error(e)

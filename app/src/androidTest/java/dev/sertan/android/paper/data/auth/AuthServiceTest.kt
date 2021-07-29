@@ -2,16 +2,31 @@ package dev.sertan.android.paper.data.auth
 
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import dev.sertan.android.paper.data.util.PaperException
+import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @SmallTest
+@HiltAndroidTest
 internal class AuthServiceTest {
-    private val service: AuthService = FakeAuthService()
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var service: AuthService
 
     private val email = "test@test.com"
     private val password = "12345678"
+
+    @Before
+    fun setup() {
+        hiltRule.inject()
+    }
 
     @Test
     fun currentUser() {
