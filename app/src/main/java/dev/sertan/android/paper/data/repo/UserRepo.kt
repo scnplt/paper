@@ -7,7 +7,6 @@ import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,18 +14,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 
 @Singleton
 class UserRepo @Inject constructor(private val authService: AuthService) {
     private val _currentUser = MutableStateFlow<Response<User>>(Response.idle())
     val currentUser: StateFlow<Response<User>> get() = _currentUser
 
-    init {
-        CoroutineScope(Dispatchers.Default).launch { refreshUser() }
-    }
-
-    private suspend fun refreshUser() {
+    suspend fun refreshUser() {
         _currentUser.emit(Response.loading())
         val response = authService.currentUser()
         _currentUser.emit(response)
