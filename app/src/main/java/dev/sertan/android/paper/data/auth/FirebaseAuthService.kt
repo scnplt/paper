@@ -9,7 +9,7 @@ import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
 import kotlinx.coroutines.tasks.await
 
-class FirebaseAuthService : AuthService {
+internal class FirebaseAuthService : AuthService {
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     override suspend fun currentUser(): Response<User> {
@@ -18,18 +18,19 @@ class FirebaseAuthService : AuthService {
             val user = User(firebaseUser.uid, firebaseUser.email ?: "")
             Response.success(user)
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 
     override suspend fun register(email: String, password: String): Response<Unit> {
         return try {
             auth.createUserWithEmailAndPassword(email, password).await()
+            auth.signOut()
             Response.success()
         } catch (e: FirebaseAuthUserCollisionException) {
-            Response.error(PaperException.UserAlreadyExists)
+            Response.failure(PaperException.UserAlreadyExists)
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 
@@ -39,11 +40,11 @@ class FirebaseAuthService : AuthService {
             if (result.user == null) throw PaperException.IncorrectInformation
             Response.success()
         } catch (e: FirebaseAuthInvalidUserException) {
-            Response.error(PaperException.IncorrectInformation)
+            Response.failure(PaperException.IncorrectInformation)
         } catch (e: FirebaseAuthInvalidCredentialsException) {
-            Response.error(PaperException.IncorrectInformation)
+            Response.failure(PaperException.IncorrectInformation)
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 
@@ -53,7 +54,7 @@ class FirebaseAuthService : AuthService {
             auth.signOut()
             Response.success()
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 
@@ -61,20 +62,21 @@ class FirebaseAuthService : AuthService {
         return try {
             val currentUser = auth.currentUser ?: throw PaperException.UserNotFound
             currentUser.delete().await()
+            auth.signOut()
             Response.success()
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 
-    override suspend fun sendResetPasswordMail(email: String): Response<Unit> {
+    override suspend fun sendResetPasswordEmail(email: String): Response<Unit> {
         return try {
             auth.sendPasswordResetEmail(email).await()
             Response.success()
         } catch (e: FirebaseAuthInvalidUserException) {
-            Response.error(PaperException.UserNotFound)
+            Response.failure(PaperException.UserNotFound)
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 

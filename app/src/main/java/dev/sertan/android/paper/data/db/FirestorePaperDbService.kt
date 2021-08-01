@@ -7,49 +7,47 @@ import com.google.firebase.ktx.Firebase
 import dev.sertan.android.paper.data.model.Paper
 import dev.sertan.android.paper.data.util.PaperException
 import dev.sertan.android.paper.data.util.Response
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 
-class FirestorePaperDbService : DbService<Paper> {
+internal class FirestorePaperDbService : DbService<Paper> {
     private val collection: CollectionReference by lazy { Firebase.firestore.collection(COLLECTION) }
 
     companion object {
         private const val COLLECTION = "papers"
     }
 
-    override suspend fun create(data: Paper): Response<Paper> {
+    override suspend fun create(data: Paper): Response<Unit> {
         return try {
             collection.document(data.uid).set(data).await()
-            Response.success(data)
+            Response.success()
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 
     override suspend fun delete(data: Paper): Response<Unit> {
         return try {
-            if (getData(data.uid).isError()) throw PaperException.DataNotFound
+            if (getData(data.uid).isFailure()) throw PaperException.DataNotFound
             collection.document(data.uid).delete().await()
             Response.success()
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 
     override suspend fun update(data: Paper): Response<Unit> {
         return try {
-            if (getData(data.uid).isError()) throw PaperException.DataNotFound
+            if (getData(data.uid).isFailure()) throw PaperException.DataNotFound
             collection.document(data.uid).set(data).await()
             Response.success()
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 
@@ -59,7 +57,7 @@ class FirestorePaperDbService : DbService<Paper> {
             val paper = document.toObject<Paper>() ?: throw PaperException.DataNotFound
             Response.success(paper)
         } catch (e: Exception) {
-            Response.error(e)
+            Response.failure(e)
         }
     }
 
@@ -73,14 +71,11 @@ class FirestorePaperDbService : DbService<Paper> {
                 .addSnapshotListener { value, error ->
                     if (error != null) cancel()
                     val papers = value?.documents?.map { document -> document.toObject<Paper>()!! }
-                    if (papers.isNullOrEmpty()) cancel()
                     trySend(Response.success(papers))
                 }
 
             awaitClose { listenerRegistration.remove() }
-        }.catch {
-            emit(Response.error(PaperException.DataNotFound))
-        }.flowOn(Dispatchers.IO)
+        }.catch { emit(Response.failure(PaperException.DataNotFound)) }
     }
 
 }
