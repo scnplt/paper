@@ -5,44 +5,25 @@ import dev.sertan.android.paper.data.model.Paper
 import dev.sertan.android.paper.data.util.Response
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 
 @Singleton
-class PaperRepo @Inject constructor(private val dbService: DbService<Paper>) {
+internal class PaperRepo @Inject constructor(private val dbService: DbService<Paper>) {
 
-    fun create(paper: Paper): Flow<Response<Paper>> {
-        return flow {
-            emit(Response.loading())
-            val response = dbService.create(paper)
-            emit(response)
-        }.flowOn(Dispatchers.IO)
+    suspend fun create(paper: Paper): Response<Unit> {
+        return dbService.create(paper)
     }
 
-    fun delete(paper: Paper): Flow<Response<Unit>> {
-        return flow {
-            emit(Response.loading())
-            val response = dbService.delete(paper)
-            emit(response)
-        }.flowOn(Dispatchers.IO)
+    suspend fun delete(paper: Paper): Response<Unit> {
+        return dbService.delete(paper)
     }
 
-    fun update(paper: Paper): Flow<Response<Unit>> {
-        return flow {
-            emit(Response.loading())
-            val response = dbService.update(paper)
-            emit(response)
-        }.flowOn(Dispatchers.IO)
+    suspend fun update(paper: Paper): Response<Unit> {
+        return dbService.update(paper)
     }
 
-    fun getData(uid: String): Flow<Response<Paper>> {
-        return flow {
-            emit(Response.loading())
-            val response = dbService.getData(uid)
-            emit(response)
-        }.flowOn(Dispatchers.IO)
+    suspend fun getData(uid: String): Response<Paper> {
+        return dbService.getData(uid)
     }
 
     fun getAllData(userUid: String): Flow<Response<List<Paper>>> {
