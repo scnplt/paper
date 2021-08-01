@@ -2,7 +2,7 @@ package dev.sertan.android.paper.data.repo
 
 import com.google.common.truth.Truth
 import dev.sertan.android.paper.data.auth.FakeAuthService
-import dev.sertan.android.paper.data.util.PaperException
+import dev.sertan.android.paper.util.PaperException
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 

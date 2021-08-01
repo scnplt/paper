@@ -1,8 +1,8 @@
 package dev.sertan.android.paper.data.db
 
 import dev.sertan.android.paper.data.model.Paper
-import dev.sertan.android.paper.data.util.PaperException
-import dev.sertan.android.paper.data.util.Response
+import dev.sertan.android.paper.util.PaperException
+import dev.sertan.android.paper.util.Response
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

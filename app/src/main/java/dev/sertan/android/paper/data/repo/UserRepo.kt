@@ -2,7 +2,7 @@ package dev.sertan.android.paper.data.repo
 
 import dev.sertan.android.paper.data.auth.AuthService
 import dev.sertan.android.paper.data.model.User
-import dev.sertan.android.paper.data.util.Response
+import dev.sertan.android.paper.util.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow

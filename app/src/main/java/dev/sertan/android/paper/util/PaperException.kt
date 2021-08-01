@@ -1,10 +1,10 @@
-package dev.sertan.android.paper.data.util
+package dev.sertan.android.paper.util
 
 import android.content.Context
 import androidx.annotation.StringRes
 import dev.sertan.android.paper.R
 
-internal sealed class PaperException(@StringRes private val uiMessageId: Int) : Exception() {
+sealed class PaperException(@StringRes private val uiMessageId: Int) : Exception() {
     object Default : PaperException(R.string.default_exception_message)
     object InvalidEmailAddress : PaperException(R.string.invalid_email_message)
     object InvalidPassword : PaperException(R.string.invalid_password_message)

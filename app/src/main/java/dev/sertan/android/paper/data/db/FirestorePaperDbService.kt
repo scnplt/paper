@@ -5,8 +5,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import dev.sertan.android.paper.data.model.Paper
-import dev.sertan.android.paper.data.util.PaperException
-import dev.sertan.android.paper.data.util.Response
+import dev.sertan.android.paper.util.PaperException
+import dev.sertan.android.paper.util.Response
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -26,8 +26,10 @@ internal class FirestorePaperDbService : DbService<Paper> {
         return try {
             collection.document(data.uid).set(data).await()
             Response.success()
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 
@@ -36,8 +38,10 @@ internal class FirestorePaperDbService : DbService<Paper> {
             if (getData(data.uid).isFailure()) throw PaperException.DataNotFound
             collection.document(data.uid).delete().await()
             Response.success()
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 
@@ -46,8 +50,10 @@ internal class FirestorePaperDbService : DbService<Paper> {
             if (getData(data.uid).isFailure()) throw PaperException.DataNotFound
             collection.document(data.uid).set(data).await()
             Response.success()
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 
@@ -56,8 +62,10 @@ internal class FirestorePaperDbService : DbService<Paper> {
             val document = collection.document(uid).get().await()
             val paper = document.toObject<Paper>() ?: throw PaperException.DataNotFound
             Response.success(paper)
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 
