@@ -3,7 +3,7 @@ package dev.sertan.android.paper.data.repo
 import com.google.common.truth.Truth
 import dev.sertan.android.paper.data.db.FakePaperDbService
 import dev.sertan.android.paper.data.model.Paper
-import dev.sertan.android.paper.data.util.PaperException
+import dev.sertan.android.paper.util.PaperException
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking

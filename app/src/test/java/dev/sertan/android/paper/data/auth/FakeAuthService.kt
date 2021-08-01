@@ -1,8 +1,8 @@
 package dev.sertan.android.paper.data.auth
 
 import dev.sertan.android.paper.data.model.User
-import dev.sertan.android.paper.data.util.PaperException
-import dev.sertan.android.paper.data.util.Response
+import dev.sertan.android.paper.util.PaperException
+import dev.sertan.android.paper.util.Response
 
 internal class FakeAuthService : AuthService {
     private var user: User? = null

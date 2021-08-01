@@ -1,6 +1,6 @@
 package dev.sertan.android.paper.data.db
 
-import dev.sertan.android.paper.data.util.Response
+import dev.sertan.android.paper.util.Response
 import kotlinx.coroutines.flow.Flow
 
 internal interface DbService<T> {

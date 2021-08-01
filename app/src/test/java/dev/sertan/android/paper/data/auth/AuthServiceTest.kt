@@ -1,7 +1,7 @@
 package dev.sertan.android.paper.data.auth
 
 import com.google.common.truth.Truth
-import dev.sertan.android.paper.data.util.PaperException
+import dev.sertan.android.paper.util.PaperException
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 

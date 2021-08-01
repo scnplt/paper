@@ -5,8 +5,8 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dev.sertan.android.paper.data.model.User
-import dev.sertan.android.paper.data.util.PaperException
-import dev.sertan.android.paper.data.util.Response
+import dev.sertan.android.paper.util.PaperException
+import dev.sertan.android.paper.util.Response
 import kotlinx.coroutines.tasks.await
 
 internal class FirebaseAuthService : AuthService {
@@ -17,8 +17,10 @@ internal class FirebaseAuthService : AuthService {
             val firebaseUser = auth.currentUser ?: throw PaperException.UserNotFound
             val user = User(firebaseUser.uid, firebaseUser.email ?: "")
             Response.success(user)
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 
@@ -29,8 +31,10 @@ internal class FirebaseAuthService : AuthService {
             Response.success()
         } catch (e: FirebaseAuthUserCollisionException) {
             Response.failure(PaperException.UserAlreadyExists)
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 
@@ -43,8 +47,10 @@ internal class FirebaseAuthService : AuthService {
             Response.failure(PaperException.IncorrectInformation)
         } catch (e: FirebaseAuthInvalidCredentialsException) {
             Response.failure(PaperException.IncorrectInformation)
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 
@@ -53,8 +59,10 @@ internal class FirebaseAuthService : AuthService {
             auth.currentUser ?: throw PaperException.UserNotFound
             auth.signOut()
             Response.success()
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 
@@ -64,8 +72,10 @@ internal class FirebaseAuthService : AuthService {
             currentUser.delete().await()
             auth.signOut()
             Response.success()
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 
@@ -75,8 +85,10 @@ internal class FirebaseAuthService : AuthService {
             Response.success()
         } catch (e: FirebaseAuthInvalidUserException) {
             Response.failure(PaperException.UserNotFound)
-        } catch (e: Exception) {
+        } catch (e: PaperException) {
             Response.failure(e)
+        } catch (e: Exception) {
+            Response.failure(PaperException.Default)
         }
     }
 

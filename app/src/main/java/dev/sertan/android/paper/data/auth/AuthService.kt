@@ -1,7 +1,7 @@
 package dev.sertan.android.paper.data.auth
 
 import dev.sertan.android.paper.data.model.User
-import dev.sertan.android.paper.data.util.Response
+import dev.sertan.android.paper.util.Response
 
 internal interface AuthService {
     suspend fun currentUser(): Response<User>
