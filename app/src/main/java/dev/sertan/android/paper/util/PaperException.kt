@@ -1,4 +1,4 @@
-package dev.sertan.android.paper.data.util
+package dev.sertan.android.paper.util
 
 import android.content.Context
 import androidx.annotation.StringRes
