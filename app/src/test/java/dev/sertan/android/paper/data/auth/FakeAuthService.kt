@@ -9,8 +9,7 @@ internal class FakeAuthService : AuthService {
     private var currentUser: User? = null
 
     override suspend fun currentUser(): Response<User> {
-        return currentUser
-            ?.let { Response.success(it) }
+        return currentUser?.let { Response.success(it) }
             ?: Response.failure(PaperException.UserNotFound)
     }
 

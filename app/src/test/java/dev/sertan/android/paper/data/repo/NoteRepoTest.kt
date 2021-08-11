@@ -1,23 +1,24 @@
-package dev.sertan.android.paper.data.db
+package dev.sertan.android.paper.data.repo
 
 import com.google.common.truth.Truth
-import dev.sertan.android.paper.data.model.Paper
+import dev.sertan.android.paper.data.db.FakeNoteDbService
+import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.util.PaperException
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
-internal class PaperDbServiceTest {
+internal class NoteRepoTest {
 
-    private val service: DbService<Paper> = FakePaperDbService()
+    private val repo = NoteRepo(FakeNoteDbService())
     private val userUid = "1"
-    private val paper = Paper(userUid)
+    private val note = Note(userUid)
 
     @Test
     fun `create successful`() {
         runBlocking {
-            val response = service.create(paper)
+            val response = repo.create(note)
             Truth.assertThat(response.isSuccess()).isTrue()
         }
     }
@@ -25,8 +26,8 @@ internal class PaperDbServiceTest {
     @Test
     fun `delete successful`() {
         runBlocking {
-            service.create(paper)
-            val response = service.delete(paper)
+            repo.create(note)
+            val response = repo.delete(note)
             Truth.assertThat(response.isSuccess()).isTrue()
         }
     }
@@ -34,7 +35,7 @@ internal class PaperDbServiceTest {
     @Test
     fun `delete failed with DataNotFound exception`() {
         runBlocking {
-            val response = service.delete(paper)
+            val response = repo.delete(note)
             Truth.assertThat(response.isFailure()).isTrue()
             Truth.assertThat(response.exception is PaperException.DataNotFound).isTrue()
         }
@@ -43,16 +44,16 @@ internal class PaperDbServiceTest {
     @Test
     fun `update successful`() {
         runBlocking {
-            service.create(paper)
-            val response = service.update(paper.apply { title = "Updated" })
-            Truth.assertThat(response.isSuccess())
+            repo.create(note)
+            val response = repo.update(note.apply { title = "Updated" })
+            Truth.assertThat(response.isSuccess()).isTrue()
         }
     }
 
     @Test
     fun `update failed with DataNotFound exception`() {
         runBlocking {
-            val response = service.update(paper.apply { title = "Updated" })
+            val response = repo.update(note.apply { title = "Updated" })
             Truth.assertThat(response.isFailure()).isTrue()
             Truth.assertThat(response.exception is PaperException.DataNotFound).isTrue()
         }
@@ -61,8 +62,8 @@ internal class PaperDbServiceTest {
     @Test
     fun `getData successful`() {
         runBlocking {
-            service.create(paper)
-            val response = service.getData(paper.uid)
+            repo.create(note)
+            val response = repo.getData(note.uid)
             Truth.assertThat(response.isSuccess()).isTrue()
         }
     }
@@ -70,7 +71,7 @@ internal class PaperDbServiceTest {
     @Test
     fun `getData failed with DataNotFound exception`() {
         runBlocking {
-            val response = service.getData(paper.uid)
+            val response = repo.getData(note.uid)
             Truth.assertThat(response.isFailure()).isTrue()
             Truth.assertThat(response.exception is PaperException.DataNotFound).isTrue()
         }
@@ -79,19 +80,19 @@ internal class PaperDbServiceTest {
     @Test
     fun `getAllData successful`() {
         runBlocking {
-            val secondPaper = Paper(userUid)
-            service.create(paper)
-            service.create(secondPaper)
-            val response = service.getAllData(userUid).take(2).last()
-            Truth.assertThat(response.value).contains(paper)
-            Truth.assertThat(response.value).contains(secondPaper)
+            val secondNote = Note(userUid)
+            repo.create(note)
+            repo.create(secondNote)
+            val response = repo.getAllData(userUid).take(2).last()
+            Truth.assertThat(response.value).contains(note)
+            Truth.assertThat(response.value).contains(secondNote)
         }
     }
 
     @Test
     fun `getAllData failed with DataNotFound exception`() {
         runBlocking {
-            val response = service.getAllData(userUid).take(2).last()
+            val response = repo.getAllData(userUid).take(2).last()
             Truth.assertThat(response.isFailure()).isTrue()
             Truth.assertThat(response.exception is PaperException.DataNotFound).isTrue()
         }
