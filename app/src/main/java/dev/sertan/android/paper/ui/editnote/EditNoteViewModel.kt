@@ -1,4 +1,4 @@
-package dev.sertan.android.paper.ui.edit_note
+package dev.sertan.android.paper.ui.editnote
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData

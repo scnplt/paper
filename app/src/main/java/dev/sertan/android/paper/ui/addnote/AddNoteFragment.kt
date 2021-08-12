@@ -1,4 +1,4 @@
-package dev.sertan.android.paper.ui.add_note
+package dev.sertan.android.paper.ui.addnote
 
 import android.graphics.drawable.Icon
 import android.os.Bundle
