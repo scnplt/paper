@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="dev.sertan.android.paper.ui.add_note.AddNoteViewModel" />
+            type="dev.sertan.android.paper.ui.addnote.AddNoteViewModel" />
 
     </data>
 

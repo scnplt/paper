@@ -71,7 +71,7 @@
 
     <fragment
         android:id="@+id/editNoteFragment"
-        android:name="dev.sertan.android.paper.ui.edit_note.EditNoteFragment"
+        android:name="dev.sertan.android.paper.ui.editnote.EditNoteFragment"
         android:label="EditNoteFragment"
         tools:layout="@layout/fragment_edit_note">
         <argument
@@ -81,7 +81,7 @@
 
     <fragment
         android:id="@+id/addNoteFragment"
-        android:name="dev.sertan.android.paper.ui.add_note.AddNoteFragment"
+        android:name="dev.sertan.android.paper.ui.addnote.AddNoteFragment"
         android:label="AddNoteFragment"
         tools:layout="@layout/fragment_add_note" />
 
