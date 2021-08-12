@@ -6,7 +6,6 @@ import dev.sertan.android.paper.R
 
 sealed class PaperException(@StringRes private val uiMessageId: Int) : Exception() {
     object Default : PaperException(R.string.default_exception_message)
-    object InvalidEmailAddress : PaperException(R.string.invalid_email_message)
     object UserAlreadyExists : PaperException(R.string.user_already_exists_message)
     object IncorrectInformation : PaperException(R.string.incorrect_information_message)
     object UserNotFound : PaperException(R.string.user_not_found_message)
