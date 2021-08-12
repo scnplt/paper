@@ -19,13 +19,13 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewNotes"
+            notes="@{viewModel.notes}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="@dimen/gap_9"
             android:visibility="@{viewModel.isEmpty ? View.INVISIBLE : View.VISIBLE}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:notes="@{viewModel.notes}"
             tools:listitem="@layout/item_note" />
 
         <TextView
