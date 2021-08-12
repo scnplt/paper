@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:autoTransition="animateToEnd"
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="@integer/duration_animation_3">
+
+        <KeyFrameSet>
+
+            <KeyAttribute
+                android:alpha="1.0"
+                motion:framePosition="0"
+                motion:motionTarget="@+id/lottieAnimation" />
+            <KeyAttribute
+                android:alpha="1.0"
+                motion:framePosition="60"
+                motion:motionTarget="@+id/lottieAnimation" />
+            <KeyAttribute
+                android:alpha="0.0"
+                motion:framePosition="80"
+                motion:motionTarget="@+id/lottieAnimation" />
+            <KeyAttribute
+                android:alpha="0.0"
+                motion:framePosition="100"
+                motion:motionTarget="@+id/lottieAnimation" />
+
+            <KeyAttribute
+                android:alpha="0.0"
+                motion:framePosition="0"
+                motion:motionTarget="@+id/textViewAppName" />
+            <KeyAttribute
+                android:alpha="0.0"
+                motion:framePosition="80"
+                motion:motionTarget="@+id/textViewAppName" />
+            <KeyAttribute
+                android:alpha="1.0"
+                motion:framePosition="95"
+                motion:motionTarget="@+id/textViewAppName" />
+            <KeyAttribute
+                android:alpha="1.0"
+                motion:framePosition="100"
+                motion:motionTarget="@+id/textViewAppName" />
+
+        </KeyFrameSet>
+
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start" />
+
+    <ConstraintSet android:id="@+id/end" />
+
+</MotionScene>
