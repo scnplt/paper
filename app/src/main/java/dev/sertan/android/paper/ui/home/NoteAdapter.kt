@@ -23,7 +23,7 @@ internal class NoteAdapter(private val listener: Listener) :
     }
 
     fun interface Listener {
-        fun oNoteClicked(note: Note)
+        fun onNoteClicked(note: Note)
     }
 
 }
