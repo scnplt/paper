@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/gap_1"
-        android:onClick="@{() -> listener.oNoteClicked(note)}">
+        android:onClick="@{() -> listener.onNoteClicked(note)}">
 
         <LinearLayout
             android:layout_width="match_parent"
