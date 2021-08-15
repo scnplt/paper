@@ -38,7 +38,7 @@ internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.L
         }
     }
 
-    override fun oNoteClicked(note: Note) {
+    override fun onNoteClicked(note: Note) {
         val direction = HomeFragmentDirections.actionHomeToNote(note)
         findNavController().navigate(direction)
     }
