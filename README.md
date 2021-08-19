@@ -1,4 +1,5 @@
 [![Android CI](https://github.com/scnplt/paper/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/scnplt/paper/actions/workflows/android.yml)
+[![Scan with Detekt](https://github.com/scnplt/paper/actions/workflows/detekt-analysis.yml/badge.svg?branch=main)](https://github.com/scnplt/paper/actions/workflows/detekt-analysis.yml)
 
 # Paper
 Simple note-taking application for Android users. 
