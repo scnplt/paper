@@ -1,6 +1,7 @@
 package dev.sertan.android.paper.data.db
 
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -29,7 +30,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
             Response.success()
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: Exception) {
+        } catch (e: FirebaseFirestoreException) {
             Response.failure(PaperException.Default)
         }
     }
@@ -41,7 +42,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
             Response.success()
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: Exception) {
+        } catch (e: FirebaseFirestoreException) {
             Response.failure(PaperException.Default)
         }
     }
@@ -53,7 +54,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
             Response.success()
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: Exception) {
+        } catch (e: FirebaseFirestoreException) {
             Response.failure(PaperException.Default)
         }
     }
@@ -65,7 +66,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
             Response.success(note)
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: Exception) {
+        } catch (e: FirebaseFirestoreException) {
             Response.failure(PaperException.Default)
         }
     }
