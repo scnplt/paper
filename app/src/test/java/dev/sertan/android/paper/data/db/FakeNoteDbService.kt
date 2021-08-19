@@ -38,9 +38,12 @@ internal class FakeNoteDbService : DbService<Note> {
         return flow {
             emit(Response.loading())
             val mPapers = notes.filter { it.userUid == userUid }
-            if (mPapers.isEmpty()) throw Exception()
+            if (mPapers.isEmpty()) throw PaperException.DataNotFound
             emit(Response.success(mPapers))
-        }.catch { emit(Response.failure(PaperException.DataNotFound)) }
+        }.catch { e ->
+            val exception = if (e is PaperException) e else PaperException.Default
+            emit(Response.failure(exception))
+        }
     }
 
 }
