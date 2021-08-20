@@ -79,6 +79,4 @@ dependencies {
     // Test
     testImplementation(Dependencies.JUNIT)
     testImplementation(Dependencies.TRUTH)
-    androidTestImplementation(Dependencies.EXT_JUNIT)
-    androidTestImplementation(Dependencies.ESPRESSO)
 }
