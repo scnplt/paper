@@ -38,8 +38,4 @@ object Dependencies {
     // Test Implementation
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val TRUTH = "com.google.truth:truth:${Versions.TRUTH}"
-
-    // Android Test Implementation
-    const val EXT_JUNIT = "androidx.test.ext:junit:${Versions.EXT_JUNIT}"
-    const val ESPRESSO = "androidx.test.espresso:espresso-core:${Versions.ESPRESSO}"
 }

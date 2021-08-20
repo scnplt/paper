@@ -16,6 +16,4 @@ object Versions {
     const val LEAKCANARY = "2.7"
     const val JUNIT = "4.13.2"
     const val TRUTH = "1.1.3"
-    const val EXT_JUNIT = "1.1.3"
-    const val ESPRESSO = "3.4.0"
 }
