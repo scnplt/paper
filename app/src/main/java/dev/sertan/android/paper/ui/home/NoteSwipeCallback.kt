@@ -3,20 +3,20 @@ package dev.sertan.android.paper.ui.home
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-class NoteTouchHelperCallback(private val callback: (Int) -> Unit) :
-    ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.LEFT) {
+
+internal class NoteSwipeCallback(private val listener: NoteAdapter.NoteListener) :
+    ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.LEFT) {
 
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        return true
+        return false
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        callback(position)
+        listener.onNoteSwipedToLeft(position)
     }
-
 }
