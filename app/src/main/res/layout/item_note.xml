@@ -10,7 +10,7 @@
 
         <variable
             name="listener"
-            type="dev.sertan.android.paper.ui.home.NoteAdapter.Listener" />
+            type="dev.sertan.android.paper.ui.home.NoteAdapter.NoteListener" />
 
     </data>
 
