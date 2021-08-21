@@ -7,7 +7,7 @@ import dev.sertan.android.paper.databinding.ItemNoteBinding
 internal class NoteViewHolder(private val binding: ItemNoteBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(note: Note, listener: NoteAdapter.Listener) {
+    fun bind(note: Note, listener: NoteAdapter.NoteListener) {
         binding.note = note
         binding.listener = listener
     }

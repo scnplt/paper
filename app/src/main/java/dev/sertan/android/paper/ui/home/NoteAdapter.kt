@@ -8,7 +8,7 @@ import dev.sertan.android.paper.R
 import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.databinding.ItemNoteBinding
 
-internal class NoteAdapter(private val listener: Listener) :
+internal class NoteAdapter(private val listener: NoteListener) :
     ListAdapter<Note, NoteViewHolder>(NoteDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -22,8 +22,9 @@ internal class NoteAdapter(private val listener: Listener) :
         holder.bind(getItem(position), listener)
     }
 
-    fun interface Listener {
+    interface NoteListener {
         fun onNoteClicked(note: Note)
+        fun onNoteSwipedToLeft(position: Int)
     }
 
 }
