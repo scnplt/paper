@@ -13,7 +13,7 @@ import dev.sertan.android.paper.databinding.FragmentHomeBinding
 import dev.sertan.android.paper.ui.BaseFragment
 
 @AndroidEntryPoint
-internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.Listener {
+internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.NoteListener {
     private val viewModel by viewModels<HomeViewModel>()
 
     override fun getLayoutRes(): Int = R.layout.fragment_home
@@ -21,11 +21,7 @@ internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.L
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
-        binding.recyclerViewNotes.adapter = NoteAdapter(this)
-
-        val touchHelperCallback =
-            NoteTouchHelperCallback { viewModel.deleteWithPosition(view, it) }
-        ItemTouchHelper(touchHelperCallback).attachToRecyclerView(binding.recyclerViewNotes)
+        setUpRecyclerView()
 
         customizeFab {
             val icon = Icon.createWithResource(requireContext(), R.drawable.ic_add)
@@ -41,6 +37,20 @@ internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.L
     override fun onNoteClicked(note: Note) {
         val direction = HomeFragmentDirections.actionHomeToNote(note)
         findNavController().navigate(direction)
+    }
+
+    override fun onNoteSwipedToLeft(position: Int) {
+        viewModel.delete(requireView(), position)
+    }
+
+    private fun setUpRecyclerView() {
+        val noteAdapter = NoteAdapter(this)
+        val noteSwipeToDeleteCallback = NoteSwipeCallback(this)
+
+        binding.recyclerViewNotes.apply {
+            adapter = noteAdapter
+            ItemTouchHelper(noteSwipeToDeleteCallback).attachToRecyclerView(this)
+        }
     }
 
 }

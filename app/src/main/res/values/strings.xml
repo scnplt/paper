@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Paper</string>
     <string name="main_action_button">Main action button.</string>
+    <string name="undo">Undo</string>
 
     <!-- Exception messages -->
     <string name="default_exception_message">Something went wrong!</string>
@@ -25,11 +26,14 @@
     <string name="registration_successful">Registration successful!</string>
     <string name="re_enter_password">Re-enter your password.</string>
 
-    <!-- Note Fragment -->
-    <string name="last_update_date">Last update\n%1$s</string>
-    <string name="create_date">Create\n%1$s</string>
+    <!-- Home Fragment -->
     <string name="you_did_not_take_any_notes">You did not take any notes.</string>
+
+    <!-- Note -->
     <string name="title">Title</string>
     <string name="content">Content</string>
+    <string name="create_date">Create\n%1$s</string>
+    <string name="last_update_date">Last update\n%1$s</string>
+    <string name="note_deleted">Note deleted.</string>
 
 </resources>
