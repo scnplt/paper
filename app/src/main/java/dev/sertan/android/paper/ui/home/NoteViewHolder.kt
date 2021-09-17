@@ -10,6 +10,7 @@ internal class NoteViewHolder(private val binding: ItemNoteBinding) :
     fun bind(note: Note, listener: NoteAdapter.NoteListener) {
         binding.note = note
         binding.listener = listener
+        binding.executePendingBindings()
     }
 
 }
