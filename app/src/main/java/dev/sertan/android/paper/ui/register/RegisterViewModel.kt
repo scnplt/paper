@@ -37,8 +37,7 @@ internal class RegisterViewModel @Inject constructor(private val userRepo: UserR
             _isLoading.postValue(false)
 
             if (response.isFailure()) {
-                val message = response.exception?.getUIMessage(view.context)
-                view.context.showToast(message)
+                view.context.showToast(response.exception?.messageRes)
                 return@launch
             }
 

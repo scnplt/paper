@@ -21,7 +21,7 @@ internal class FirebaseAuthService : AuthService {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseAuthException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
@@ -35,7 +35,7 @@ internal class FirebaseAuthService : AuthService {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseAuthException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
@@ -51,7 +51,7 @@ internal class FirebaseAuthService : AuthService {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseAuthException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
@@ -63,7 +63,7 @@ internal class FirebaseAuthService : AuthService {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseAuthException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
@@ -76,7 +76,7 @@ internal class FirebaseAuthService : AuthService {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseAuthException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
@@ -89,7 +89,7 @@ internal class FirebaseAuthService : AuthService {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseAuthException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
