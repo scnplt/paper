@@ -71,7 +71,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
         }
     }
 
-    @ExperimentalCoroutinesApi
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAllData(userUid: String): Flow<Response<List<Note>>> {
         return callbackFlow {
             trySend(Response.loading())
