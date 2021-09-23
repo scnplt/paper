@@ -40,7 +40,7 @@ internal class AddNoteViewModel @Inject constructor(
             )
             val response = noteRepo.create(note)
             if (response.isSuccess()) view.findNavController().popBackStack()
-            view.context.run { showToast(response.exception?.getUIMessage(this)) }
+            view.context.showToast(response.exception?.messageRes)
         }
     }
 
