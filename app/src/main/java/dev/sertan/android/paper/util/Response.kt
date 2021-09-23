@@ -1,13 +1,13 @@
 package dev.sertan.android.paper.util
 
-internal sealed class Response<out T> private constructor(
+internal sealed class Response<out T>(
     val value: T? = null,
     val exception: PaperException? = null
 ) {
     companion object {
         fun idle(): Idle = Idle
         fun loading(): Loading = Loading
-        fun failure(e: PaperException = PaperException.Default): Failure = Failure(e)
+        fun failure(e: PaperException? = null): Failure = Failure(e ?: PaperException.Default)
         fun <T> success(data: T? = null): Success<T> = Success(data)
     }
 

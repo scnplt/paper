@@ -34,9 +34,7 @@ internal class LoginViewModel @Inject constructor(private val userRepo: UserRepo
             val response = userRepo.logIn(email.value!!, password.value!!)
             _isLoading.postValue(false)
 
-            if (response.isFailure()) {
-                view.context.run { showToast(response.exception?.getUIMessage(this)) }
-            }
+            if (response.isFailure()) view.context.showToast(response.exception?.messageRes)
         }
     }
 

@@ -39,7 +39,7 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val response = noteRepo.delete(note)
             if (response.isFailure()) {
-                view.context.run { showToast(response.exception?.getUIMessage(this)) }
+                view.context.showToast(response.exception?.messageRes)
                 return@launch
             }
             showSnackbar(view)
@@ -58,7 +58,7 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val response = noteRepo.create(lastDeletedNote!!)
             if (response.isFailure()) {
-                view.context.run { showToast(response.exception?.getUIMessage(this)) }
+                view.context.showToast(response.exception?.messageRes)
                 return@launch
             }
             lastDeletedNote = null

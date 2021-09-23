@@ -26,7 +26,7 @@ internal class EditNoteViewModel @Inject constructor(private val noteRepo: NoteR
                 .update(note.value?.apply { updateDate = Utils.getCurrentDate() } ?: return@launch)
 
             if (response.isFailure()) {
-                view.context.run { showToast(response.exception?.getUIMessage(this)) }
+                view.context.showToast(response.exception?.messageRes)
                 return@launch
             }
             view.findNavController().popBackStack()
