@@ -31,7 +31,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseFirestoreException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
@@ -43,7 +43,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseFirestoreException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
@@ -55,7 +55,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseFirestoreException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
@@ -67,7 +67,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
         } catch (e: PaperException) {
             Response.failure(e)
         } catch (e: FirebaseFirestoreException) {
-            Response.failure(PaperException.Default)
+            Response.failure()
         }
     }
 
@@ -87,7 +87,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
                     }
 
             awaitClose { listenerRegistration.remove() }
-        }.catch { emit(Response.failure(PaperException.Default)) }
+        }.catch { emit(Response.failure()) }
     }
 
 }
