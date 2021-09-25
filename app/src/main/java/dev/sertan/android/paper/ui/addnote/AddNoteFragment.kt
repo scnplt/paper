@@ -1,13 +1,13 @@
 package dev.sertan.android.paper.ui.addnote
 
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.R
 import dev.sertan.android.paper.databinding.FragmentAddNoteBinding
-import dev.sertan.android.paper.ui.BaseFragment
+import dev.sertan.android.paper.ui.common.BaseFragment
+import dev.sertan.android.paper.ui.main.MainActivity
 
 @AndroidEntryPoint
 internal class AddNoteFragment : BaseFragment<FragmentAddNoteBinding>() {
@@ -19,12 +19,7 @@ internal class AddNoteFragment : BaseFragment<FragmentAddNoteBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
 
-        customizeFab {
-            val icon = Icon.createWithResource(requireContext(), R.drawable.ic_done)
-            setImageIcon(icon)
-            setOnClickListener { viewModel.save(view) }
-            show()
-        }
+        (requireActivity() as MainActivity).onFabClicked { viewModel.save(view) }
     }
 
 }

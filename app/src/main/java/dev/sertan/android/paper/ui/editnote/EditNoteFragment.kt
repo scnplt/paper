@@ -1,6 +1,5 @@
 package dev.sertan.android.paper.ui.editnote
 
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -8,7 +7,8 @@ import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.R
 import dev.sertan.android.paper.databinding.FragmentEditNoteBinding
-import dev.sertan.android.paper.ui.BaseFragment
+import dev.sertan.android.paper.ui.common.BaseFragment
+import dev.sertan.android.paper.ui.main.MainActivity
 
 @AndroidEntryPoint
 internal class EditNoteFragment : BaseFragment<FragmentEditNoteBinding>() {
@@ -22,12 +22,7 @@ internal class EditNoteFragment : BaseFragment<FragmentEditNoteBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel.apply { note.postValue(this@EditNoteFragment.note) }
 
-        customizeFab {
-            val icon = Icon.createWithResource(requireContext(), R.drawable.ic_done)
-            setImageIcon(icon)
-            setOnClickListener { viewModel.update(view) }
-            show()
-        }
+        (requireActivity() as MainActivity).onFabClicked { viewModel.update(view) }
     }
 
 }

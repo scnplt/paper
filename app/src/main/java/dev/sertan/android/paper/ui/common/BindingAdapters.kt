@@ -1,4 +1,4 @@
-package dev.sertan.android.paper.ui
+package dev.sertan.android.paper.ui.common
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
