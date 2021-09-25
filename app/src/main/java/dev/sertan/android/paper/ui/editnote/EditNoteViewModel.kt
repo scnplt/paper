@@ -8,7 +8,6 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.data.repo.NoteRepo
-import dev.sertan.android.paper.util.Utils
 import dev.sertan.android.paper.util.showToast
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -22,14 +21,13 @@ internal class EditNoteViewModel @Inject constructor(private val noteRepo: NoteR
     fun update(view: View) {
         job?.cancel()
         job = viewModelScope.launch {
-            val response = noteRepo
-                .update(note.value?.apply { updateDate = Utils.getCurrentDate() } ?: return@launch)
+            val response = note.value?.run {
+                updateDate = System.currentTimeMillis()
+                noteRepo.update(this)
+            } ?: return@launch
 
-            if (response.isFailure()) {
-                view.context.showToast(response.exception?.messageRes)
-                return@launch
-            }
-            view.findNavController().popBackStack()
+            if (response.isSuccess()) view.findNavController().popBackStack()
+            view.context.showToast(response.exception?.messageRes)
         }
     }
 

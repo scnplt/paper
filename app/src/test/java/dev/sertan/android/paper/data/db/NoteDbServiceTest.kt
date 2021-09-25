@@ -12,7 +12,7 @@ internal class NoteDbServiceTest {
 
     private val service: DbService<Note> = FakeNoteDbService()
     private val userUid = "1"
-    private val note = Note(userUid)
+    private val note = Note(userUid = userUid)
 
     @Test
     fun `create successful`() {
@@ -79,7 +79,7 @@ internal class NoteDbServiceTest {
     @Test
     fun `getAllData successful`() {
         runBlocking {
-            val secondNote = Note(userUid)
+            val secondNote = Note(userUid = userUid)
             service.create(note)
             service.create(secondNote)
             val response = service.getAllData(userUid).take(2).last()

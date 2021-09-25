@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="dev.sertan.android.paper.util.Utils" />
+
         <variable
             name="note"
             type="dev.sertan.android.paper.data.model.Note" />
@@ -32,7 +34,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{@string/last_update_date(note.updateDate)}"
+                    android:text="@{@string/last_update_date(Utils.timestampToSimpleDate(note.updateDate))}"
                     android:textAlignment="textStart"
                     android:textAppearance="?attr/textAppearanceBody2"
                     tools:text="Last update\n02/01/2021" />
@@ -41,7 +43,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{@string/create_date(note.createDate)}"
+                    android:text="@{@string/create_date(Utils.timestampToSimpleDate(note.createDate))}"
                     android:textAlignment="textEnd"
                     android:textAppearance="?attr/textAppearanceBody2"
                     tools:text="Create\n01/01/2021" />

@@ -13,7 +13,7 @@ internal class NoteRepoTest {
 
     private val repo = NoteRepo(FakeNoteDbService())
     private val userUid = "1"
-    private val note = Note(userUid)
+    private val note = Note(userUid = userUid)
 
     @Test
     fun `create successful`() {
@@ -80,7 +80,7 @@ internal class NoteRepoTest {
     @Test
     fun `getAllData successful`() {
         runBlocking {
-            val secondNote = Note(userUid)
+            val secondNote = Note(userUid = userUid)
             repo.create(note)
             repo.create(secondNote)
             val response = repo.getAllData(userUid).take(2).last()
