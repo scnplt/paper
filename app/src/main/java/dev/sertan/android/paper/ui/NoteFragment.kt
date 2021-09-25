@@ -1,6 +1,5 @@
 package dev.sertan.android.paper.ui
 
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
@@ -8,6 +7,8 @@ import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.R
 import dev.sertan.android.paper.databinding.FragmentNoteBinding
+import dev.sertan.android.paper.ui.common.BaseFragment
+import dev.sertan.android.paper.ui.main.MainActivity
 
 @AndroidEntryPoint
 internal class NoteFragment : BaseFragment<FragmentNoteBinding>() {
@@ -20,14 +21,9 @@ internal class NoteFragment : BaseFragment<FragmentNoteBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.note = note
 
-        customizeFab {
-            val icon = Icon.createWithResource(requireContext(), R.drawable.ic_edit)
-            setImageIcon(icon)
-            setOnClickListener {
-                val direction = NoteFragmentDirections.actionNoteToEditNote(note)
-                findNavController().navigate(direction)
-            }
-            show()
+        (requireActivity() as MainActivity).onFabClicked {
+            val direction = NoteFragmentDirections.actionNoteToEditNote(note)
+            findNavController().navigate(direction)
         }
     }
 

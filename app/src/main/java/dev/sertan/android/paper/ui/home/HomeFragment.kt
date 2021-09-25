@@ -1,6 +1,5 @@
 package dev.sertan.android.paper.ui.home
 
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -10,10 +9,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.R
 import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.databinding.FragmentHomeBinding
-import dev.sertan.android.paper.ui.BaseFragment
+import dev.sertan.android.paper.ui.common.BaseFragment
+import dev.sertan.android.paper.ui.main.MainActivity
 
 @AndroidEntryPoint
 internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.NoteListener {
+
     private val viewModel by viewModels<HomeViewModel>()
 
     override fun getLayoutRes(): Int = R.layout.fragment_home
@@ -23,14 +24,9 @@ internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.N
         binding.viewModel = viewModel
         setUpRecyclerView()
 
-        customizeFab {
-            val icon = Icon.createWithResource(requireContext(), R.drawable.ic_add)
-            setImageIcon(icon)
-            setOnClickListener {
-                val direction = HomeFragmentDirections.actionHomeToAddNote()
-                findNavController().navigate(direction)
-            }
-            show()
+        (requireActivity() as MainActivity).onFabClicked {
+            val direction = HomeFragmentDirections.actionHomeToAddNote()
+            findNavController().navigate(direction)
         }
     }
 

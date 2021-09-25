@@ -6,7 +6,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.R
 import dev.sertan.android.paper.databinding.FragmentLoginBinding
-import dev.sertan.android.paper.ui.BaseFragment
+import dev.sertan.android.paper.ui.common.BaseFragment
 
 @AndroidEntryPoint
 internal class LoginFragment : BaseFragment<FragmentLoginBinding>() {

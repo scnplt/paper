@@ -1,4 +1,4 @@
-package dev.sertan.android.paper.ui
+package dev.sertan.android.paper.ui.common
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,11 +8,10 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import dev.sertan.android.paper.ui.main.MainActivity
 
 internal abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
-    lateinit var binding: VDB
+    private var _binding: VDB? = null
+    val binding get() = _binding!!
 
     @LayoutRes
     abstract fun getLayoutRes(): Int
@@ -22,15 +21,13 @@ internal abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(layoutInflater, getLayoutRes(), container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
-        return binding.root
+        _binding = DataBindingUtil.inflate(layoutInflater, getLayoutRes(), container, false)
+        return binding.apply { lifecycleOwner = viewLifecycleOwner }.root
     }
 
-    inline fun customizeFab(block: FloatingActionButton.() -> Unit) {
-        val activity = requireActivity()
-        if (activity !is MainActivity) return
-        activity.customizeFab(block)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
