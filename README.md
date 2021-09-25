@@ -2,10 +2,11 @@
 [![Scan with Detekt](https://github.com/scnplt/paper/actions/workflows/detekt-analysis.yml/badge.svg?branch=main)](https://github.com/scnplt/paper/actions/workflows/detekt-analysis.yml)
 
 # Paper
+
 Simple note-taking application for Android users. 
 
-
 ## Screenshots
+
 <img src="screenshots/login.png" height="400" alt="Login screen"/> <img src="screenshots/home.png" height="400" alt="Home screen"/>
 <img src="screenshots/note.png" height="400" alt="Note screen"/> <img src="screenshots/addnote.png" height="400" alt="Add note screen"/>
 
@@ -13,32 +14,38 @@ Simple note-taking application for Android users.
 <img src="screenshots/night/note.png" height="400" alt="Note screen"/> <img src="screenshots/night/addnote.png" height="400" alt="Add note screen"/>
 
 ### Delete note
+
 You can delete notes by swiping left on the home screen.
 
 <img src="screenshots/delete.gif" height="400" alt="Delete note"/>
 
-
 ## Using
-You need to create a [Firebase](https://firebase.google.com/) project and put the `google-services.json` file under the [app](app) folder.
 
+- Create a [Firebase](https://firebase.google.com/) project and put the `google-services.json` file under the [app](app) folder.
+- Go to https://console.firebase.google.com/project/{YOUR_PROJECT_ID}/firestore/indexes and create a composite index.
+  - Collection ID: `notes`
+  - Fields: `userUid` Ascending - `updateDate` Descending
+  - Query scope: `Collection`
 
 ## Theme
+
 - Font: [Mali](https://fonts.google.com/specimen/Mali)
 - Colors:
-    | Grey                                                                      | Orange                                                                    |
-    |---------------------------------------------------------------------------|---------------------------------------------------------------------------|
-    | ![#FAFAFA](https://via.placeholder.com/15/FAFAFA/000000?text=+) `#FAFAFA` | ![#FFB74D](https://via.placeholder.com/15/FFB74D/000000?text=+) `#FFB74D` |
-    | ![#EEEEEE](https://via.placeholder.com/15/EEEEEE/000000?text=+) `#EEEEEE` | ![#FFA726](https://via.placeholder.com/15/FFA726/000000?text=+) `#FFA726` |
-    | ![#E0E0E0](https://via.placeholder.com/15/E0E0E0/000000?text=+) `#E0E0E0` | ![#FF9800](https://via.placeholder.com/15/FF9800/000000?text=+) `#FF9800` |
-    | ![#616161](https://via.placeholder.com/15/616161/000000?text=+) `#616161` |                                                                           |
-    | ![#424242](https://via.placeholder.com/15/424242/000000?text=+) `#424242` |                                                                           |
-    | Red                                                                       | Black                                                                     |
-    | ![#EF9A9A](https://via.placeholder.com/15/EF9A9A/000000?text=+) `#EF9A9A` | ![#262626](https://via.placeholder.com/15/262626/000000?text=+) `#262626` |
-    | ![#EF5350](https://via.placeholder.com/15/EF5350/000000?text=+) `#EF5350` | ![#000000](https://via.placeholder.com/15/000000/000000?text=+) `#000000` |
-    | White                                                                     |
-    | ![#FFFFFF](https://via.placeholder.com/15/FFFFFF/000000?text=+) `#FFFFFF` |
+  | Grey                                                                      | Orange                                                                    |
+  |---------------------------------------------------------------------------|---------------------------------------------------------------------------|
+  | ![#FAFAFA](https://via.placeholder.com/15/FAFAFA/000000?text=+) `#FAFAFA` | ![#FFB74D](https://via.placeholder.com/15/FFB74D/000000?text=+) `#FFB74D` |
+  | ![#EEEEEE](https://via.placeholder.com/15/EEEEEE/000000?text=+) `#EEEEEE` | ![#FFA726](https://via.placeholder.com/15/FFA726/000000?text=+) `#FFA726` |
+  | ![#E0E0E0](https://via.placeholder.com/15/E0E0E0/000000?text=+) `#E0E0E0` | ![#FF9800](https://via.placeholder.com/15/FF9800/000000?text=+) `#FF9800` |
+  | ![#616161](https://via.placeholder.com/15/616161/000000?text=+) `#616161` |                                                                           |
+  | ![#424242](https://via.placeholder.com/15/424242/000000?text=+) `#424242` |                                                                           |
+  | Red                                                                       | Black                                                                     |
+  | ![#EF9A9A](https://via.placeholder.com/15/EF9A9A/000000?text=+) `#EF9A9A` | ![#262626](https://via.placeholder.com/15/262626/000000?text=+) `#262626` |
+  | ![#EF5350](https://via.placeholder.com/15/EF5350/000000?text=+) `#EF5350` | ![#000000](https://via.placeholder.com/15/000000/000000?text=+) `#000000` |
+  | White                                                                     |
+  | ![#FFFFFF](https://via.placeholder.com/15/FFFFFF/000000?text=+) `#FFFFFF` |
 
 ## Used Technologies and Libraries
+
 - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - [Firebase](https://firebase.google.com/)
 - [Navigation](https://developer.android.com/guide/navigation)
@@ -51,13 +58,13 @@ You need to create a [Firebase](https://firebase.google.com/) project and put th
 - [Truth](https://truth.dev/)
 - [LeakCanary](https://square.github.io/leakcanary/)
 
-
 ## Credits
+
 - [Freepik](https://www.flaticon.com/authors/freepik) - App icon
 - [Rasmus Foxman](https://lottiefiles.com/user/71324) - Splash screen animation
 
-
 ## License
+
 ```
 MIT License
 
