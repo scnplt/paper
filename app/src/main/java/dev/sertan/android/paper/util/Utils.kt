@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
+    private val simpleDateFormat
+            by lazy { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
 
-    fun getCurrentDate(): String {
-        val time = Calendar.getInstance().time
-        return SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(time)
+    @JvmStatic
+    fun timestampToSimpleDate(value: Long): String {
+        val date = Date(value)
+        return simpleDateFormat.format(date)
     }
 
 }

@@ -78,7 +78,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
 
             val listenerRegistration =
                 collection.whereEqualTo("userUid", userUid)
-                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .orderBy("updateDate", Query.Direction.DESCENDING)
                     .addSnapshotListener { value, error ->
                         if (error != null) cancel()
                         val notes =

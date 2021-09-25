@@ -33,12 +33,9 @@ internal class AddNoteViewModel @Inject constructor(
 
         job?.cancel()
         job = viewModelScope.launch {
-            val note = Note(
-                userUid = userUid ?: return@launch,
-                title = title,
-                content = content
-            )
+            val note = Note(title, content, userUid ?: return@launch)
             val response = noteRepo.create(note)
+
             if (response.isSuccess()) view.findNavController().popBackStack()
             view.context.showToast(response.exception?.messageRes)
         }
