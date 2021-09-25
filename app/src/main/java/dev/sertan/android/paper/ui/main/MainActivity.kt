@@ -1,15 +1,16 @@
 package dev.sertan.android.paper.ui.main
 
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.NavGraphDirections
 import dev.sertan.android.paper.R
@@ -42,10 +43,21 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
         arguments: Bundle?
     ) {
         binding.fab.hide()
+
+        val iconId = when (destination.id) {
+            R.id.addNoteFragment -> R.drawable.ic_done
+            R.id.editNoteFragment -> R.drawable.ic_done
+            R.id.homeFragment -> R.drawable.ic_add
+            R.id.noteFragment -> R.drawable.ic_edit
+            else -> return
+        }
+
+        val icon = Icon.createWithResource(this, iconId)
+        binding.fab.apply { setImageIcon(icon) }.show()
     }
 
-    inline fun customizeFab(block: (FloatingActionButton) -> Unit) {
-        block(binding.fab)
+    fun onFabClicked(listener: View.OnClickListener) {
+        binding.fab.setOnClickListener(listener)
     }
 
     private fun listenObservables() {
