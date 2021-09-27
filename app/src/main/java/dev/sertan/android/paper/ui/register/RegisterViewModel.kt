@@ -41,8 +41,7 @@ internal class RegisterViewModel @Inject constructor(private val userRepo: UserR
                 return@launch
             }
 
-            val message = view.context.getString(R.string.registration_successful)
-            view.context.showToast(message)
+            view.context.showToast(R.string.registration_successful)
             view.findNavController().popBackStack()
         }
     }
