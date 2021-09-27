@@ -46,7 +46,7 @@ internal class LoginViewModel @Inject constructor(private val userRepo: UserRepo
     fun recoverPassword(view: View) {
         val email = email.value!!
         if (!Validate.email(email)) {
-            view.context.run { showToast(getString(R.string.invalid_email_message)) }
+            view.context.showToast(R.string.invalid_email_message)
             return
         }
 
@@ -54,7 +54,7 @@ internal class LoginViewModel @Inject constructor(private val userRepo: UserRepo
             userRepo.sendResetPasswordEmail(email)
 
             // Showing the "User Not Found" exception message can be a security issue.
-            view.context.run { showToast(getString(R.string.send_password_recovery_email)) }
+            view.context.showToast(R.string.send_password_recovery_email)
         }
     }
 
