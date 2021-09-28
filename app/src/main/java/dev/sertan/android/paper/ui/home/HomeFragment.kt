@@ -24,7 +24,7 @@ internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.N
         binding.viewModel = viewModel
         setUpRecyclerView()
 
-        (requireActivity() as MainActivity).onFabClicked {
+        (requireActivity() as? MainActivity)?.onFabClicked {
             val direction = HomeFragmentDirections.actionHomeToAddNote()
             findNavController().navigate(direction)
         }
@@ -35,9 +35,7 @@ internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.N
         findNavController().navigate(direction)
     }
 
-    override fun onNoteSwipedToLeft(position: Int) {
-        viewModel.delete(requireView(), position)
-    }
+    override fun onNoteSwipedToLeft(position: Int) = viewModel.delete(requireView(), position)
 
     private fun setUpRecyclerView() {
         val noteAdapter = NoteAdapter(this)

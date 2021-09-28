@@ -56,9 +56,7 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
         binding.fab.apply { setImageIcon(icon) }.show()
     }
 
-    fun onFabClicked(listener: View.OnClickListener) {
-        binding.fab.setOnClickListener(listener)
-    }
+    fun onFabClicked(listener: View.OnClickListener) = binding.fab.setOnClickListener(listener)
 
     private fun listenObservables() {
         viewModel.currentUser.observe(this) {
