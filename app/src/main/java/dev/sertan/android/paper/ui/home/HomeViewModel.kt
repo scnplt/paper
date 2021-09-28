@@ -30,8 +30,8 @@ internal class HomeViewModel @Inject constructor(
             it.value?.run { noteRepo.getAllData(this.uid).asLiveData() }
         }
 
-    val isEmpty: LiveData<Boolean> = Transformations
-        .map(notes) { it.value?.isNullOrEmpty() }
+    val isEmpty: LiveData<Boolean> =
+        Transformations.map(notes) { it.value?.isNullOrEmpty() }
 
     fun delete(view: View, position: Int) {
         val note = notes.value?.value?.get(position) ?: return
