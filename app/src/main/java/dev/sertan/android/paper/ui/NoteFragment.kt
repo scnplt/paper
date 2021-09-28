@@ -21,7 +21,7 @@ internal class NoteFragment : BaseFragment<FragmentNoteBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.note = note
 
-        (requireActivity() as MainActivity).onFabClicked {
+        (requireActivity() as? MainActivity)?.onFabClicked {
             val direction = NoteFragmentDirections.actionNoteToEditNote(note)
             findNavController().navigate(direction)
         }

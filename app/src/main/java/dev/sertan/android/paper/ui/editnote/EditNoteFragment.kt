@@ -22,7 +22,7 @@ internal class EditNoteFragment : BaseFragment<FragmentEditNoteBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel.apply { note.postValue(this@EditNoteFragment.note) }
 
-        (requireActivity() as MainActivity).onFabClicked { viewModel.update(view) }
+        (requireActivity() as? MainActivity)?.onFabClicked { viewModel.update(view) }
     }
 
 }

@@ -19,7 +19,7 @@ internal class AddNoteFragment : BaseFragment<FragmentAddNoteBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
 
-        (requireActivity() as MainActivity).onFabClicked { viewModel.save(view) }
+        (requireActivity() as? MainActivity)?.onFabClicked { viewModel.save(view) }
     }
 
 }
