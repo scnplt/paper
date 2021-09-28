@@ -27,9 +27,7 @@ internal class UserRepo @Inject constructor(private val authService: AuthService
         return authService.logIn(email, password).also { refreshCurrentUser() }
     }
 
-    suspend fun logOut(): Response<Unit> {
-        return authService.logOut().also { refreshCurrentUser() }
-    }
+    suspend fun logOut(): Response<Unit> = authService.logOut().also { refreshCurrentUser() }
 
     suspend fun deleteAccount(): Response<Unit> {
         return authService.deleteAccount().also { refreshCurrentUser() }

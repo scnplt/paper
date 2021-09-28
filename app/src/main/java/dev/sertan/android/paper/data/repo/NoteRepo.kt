@@ -10,24 +10,14 @@ import javax.inject.Singleton
 @Singleton
 internal class NoteRepo @Inject constructor(private val dbService: DbService<Note>) {
 
-    suspend fun create(note: Note): Response<Unit> {
-        return dbService.create(note)
-    }
+    suspend fun create(note: Note): Response<Unit> = dbService.create(note)
 
-    suspend fun delete(note: Note): Response<Unit> {
-        return dbService.delete(note)
-    }
+    suspend fun delete(note: Note): Response<Unit> = dbService.delete(note)
 
-    suspend fun update(note: Note): Response<Unit> {
-        return dbService.update(note)
-    }
+    suspend fun update(note: Note): Response<Unit> = dbService.update(note)
 
-    suspend fun getData(uid: String): Response<Note> {
-        return dbService.getData(uid)
-    }
+    suspend fun getData(uid: String): Response<Note> = dbService.getData(uid)
 
-    fun getAllData(userUid: String): Flow<Response<List<Note>>> {
-        return dbService.getAllData(userUid)
-    }
+    fun getAllData(userUid: String): Flow<Response<List<Note>>> = dbService.getAllData(userUid)
 
 }

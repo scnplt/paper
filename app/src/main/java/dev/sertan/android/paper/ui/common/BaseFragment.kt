@@ -10,8 +10,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
 internal abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
-    private var _binding: VDB? = null
-    val binding get() = _binding!!
+
+    lateinit var binding: VDB
 
     @LayoutRes
     abstract fun getLayoutRes(): Int
@@ -21,13 +21,8 @@ internal abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DataBindingUtil.inflate(layoutInflater, getLayoutRes(), container, false)
+        binding = DataBindingUtil.inflate(layoutInflater, getLayoutRes(), container, false)
         return binding.apply { lifecycleOwner = viewLifecycleOwner }.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }
