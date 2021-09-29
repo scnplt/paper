@@ -7,7 +7,7 @@ internal sealed class Response<out T>(
     companion object {
         fun idle(): Idle = Idle
         fun loading(): Loading = Loading
-        fun failure(e: PaperException? = null): Failure = Failure(e ?: PaperException.Default)
+        fun failure(e: PaperException = PaperException.Default): Failure = Failure(e)
         fun <T> success(data: T? = null): Success<T> = Success(data)
     }
 

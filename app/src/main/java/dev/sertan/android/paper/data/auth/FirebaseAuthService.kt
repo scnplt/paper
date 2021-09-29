@@ -1,5 +1,6 @@
 package dev.sertan.android.paper.data.auth
 
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -45,12 +46,12 @@ internal class FirebaseAuthService : AuthService {
             if (result.user == null) throw PaperException.IncorrectInformation
             Response.success()
         } catch (e: FirebaseAuthInvalidUserException) {
-            Response.failure(PaperException.IncorrectInformation)
+            Response.failure(PaperException.UserNotFound)
         } catch (e: FirebaseAuthInvalidCredentialsException) {
             Response.failure(PaperException.IncorrectInformation)
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseAuthException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }
