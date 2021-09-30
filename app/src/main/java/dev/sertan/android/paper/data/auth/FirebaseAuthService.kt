@@ -2,7 +2,6 @@ package dev.sertan.android.paper.data.auth
 
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -11,8 +10,7 @@ import dev.sertan.android.paper.util.PaperException
 import dev.sertan.android.paper.util.Response
 import kotlinx.coroutines.tasks.await
 
-internal class FirebaseAuthService : AuthService {
-    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+internal class FirebaseAuthService(private val auth: FirebaseAuth) : AuthService {
 
     override suspend fun currentUser(): Response<User> {
         return try {
@@ -21,7 +19,7 @@ internal class FirebaseAuthService : AuthService {
             Response.success(user)
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseAuthException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }
@@ -35,7 +33,7 @@ internal class FirebaseAuthService : AuthService {
             Response.failure(PaperException.UserAlreadyExists)
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseAuthException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }
@@ -63,7 +61,7 @@ internal class FirebaseAuthService : AuthService {
             Response.success()
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseAuthException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }
@@ -76,7 +74,7 @@ internal class FirebaseAuthService : AuthService {
             Response.success()
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseAuthException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }
@@ -89,7 +87,7 @@ internal class FirebaseAuthService : AuthService {
             Response.failure(PaperException.UserNotFound)
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseAuthException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }

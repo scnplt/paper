@@ -17,4 +17,5 @@ internal class NoteSwipeCallback(private val listener: NoteAdapter.NoteListener)
         val position = viewHolder.adapterPosition
         listener.onNoteSwipedToLeft(position)
     }
+
 }

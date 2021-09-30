@@ -19,24 +19,18 @@ internal class UserRepo @Inject constructor(private val authService: AuthService
         _currentUser.emit(response)
     }
 
-    suspend fun register(email: String, password: String): Response<Unit> {
-        return authService.register(email, password)
-    }
+    suspend fun register(email: String, password: String): Response<Unit> =
+        authService.register(email, password)
 
-    suspend fun logIn(email: String, password: String): Response<Unit> {
-        return authService.logIn(email, password).also { refreshCurrentUser() }
-    }
+    suspend fun logIn(email: String, password: String): Response<Unit> =
+        authService.logIn(email, password).also { refreshCurrentUser() }
 
     suspend fun logOut(): Response<Unit> = authService.logOut().also { refreshCurrentUser() }
 
-    suspend fun deleteAccount(): Response<Unit> {
-        return authService.deleteAccount().also { refreshCurrentUser() }
-    }
+    suspend fun deleteAccount(): Response<Unit> =
+        authService.deleteAccount().also { refreshCurrentUser() }
 
-    suspend fun sendResetPasswordEmail(email: String): Response<Unit> {
-        return authService.sendResetPasswordEmail(email)
-    }
+    suspend fun sendResetPasswordEmail(email: String): Response<Unit> =
+        authService.sendResetPasswordEmail(email)
 
 }
-
-

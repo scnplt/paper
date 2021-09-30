@@ -1,5 +1,7 @@
 package dev.sertan.android.paper.data.module
 
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,5 +16,6 @@ internal object AuthServiceModule {
 
     @Provides
     @Singleton
-    fun provideAuthService(): AuthService = FirebaseAuthService()
+    fun provideAuthService(): AuthService = FirebaseAuthService(Firebase.auth)
+
 }

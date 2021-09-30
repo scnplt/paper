@@ -47,13 +47,13 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun showSnackbar(view: View) {
+    private fun showSnackbar(view: View) =
         Snackbar.make(view, R.string.note_deleted, Snackbar.LENGTH_LONG)
             .setAction(R.string.undo) { undoDelete(view) }.show()
-    }
+
 
     private fun undoDelete(view: View) {
-        if (lastDeletedNote == null) return
+        lastDeletedNote ?: return
 
         viewModelScope.launch {
             val response = noteRepo.create(lastDeletedNote!!)

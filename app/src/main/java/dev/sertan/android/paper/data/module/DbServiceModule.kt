@@ -1,5 +1,7 @@
 package dev.sertan.android.paper.data.module
 
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,5 +17,6 @@ internal object DbServiceModule {
 
     @Provides
     @Singleton
-    fun provideNoteDbService(): DbService<Note> = FirestoreNoteDbService()
+    fun provideNoteDbService(): DbService<Note> = FirestoreNoteDbService(Firebase.firestore)
+
 }

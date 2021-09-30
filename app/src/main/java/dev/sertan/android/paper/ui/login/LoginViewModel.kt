@@ -34,7 +34,7 @@ internal class LoginViewModel @Inject constructor(private val userRepo: UserRepo
             val response = userRepo.logIn(email.value!!, password.value!!)
             _isLoading.postValue(false)
 
-            if (response.isFailure()) view.context.showToast(response.exception?.messageRes)
+            view.context.showToast(response.exception?.messageRes)
         }
     }
 
@@ -51,15 +51,14 @@ internal class LoginViewModel @Inject constructor(private val userRepo: UserRepo
         }
 
         viewModelScope.launch {
-            userRepo.sendResetPasswordEmail(email)
+            val response = userRepo.sendResetPasswordEmail(email)
 
-            // Showing the "User Not Found" exception message can be a security issue.
-            view.context.showToast(R.string.send_password_recovery_email)
+            if (response.isSuccess()) view.context.showToast(R.string.send_password_recovery_email)
+            view.context.showToast(response.exception?.messageRes)
         }
     }
 
-    private fun validateForm(): Boolean {
-        return Validate.email(email.value!!) && Validate.password(password.value!!)
-    }
+    private fun validateForm(): Boolean =
+        Validate.email(email.value!!) && Validate.password(password.value!!)
 
 }
