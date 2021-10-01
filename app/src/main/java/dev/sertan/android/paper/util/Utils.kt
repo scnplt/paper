@@ -8,9 +8,6 @@ object Utils {
             by lazy { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
 
     @JvmStatic
-    fun timestampToSimpleDate(value: Long): String {
-        val date = Date(value)
-        return simpleDateFormat.format(date)
-    }
+    fun timestampToSimpleDate(value: Long): String = simpleDateFormat.format(Date(value))
 
 }

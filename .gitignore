@@ -45,3 +45,5 @@ lint/outputs/
 lint/tmp/
 
 app/google-services.json
+
+firebase-tools.exe

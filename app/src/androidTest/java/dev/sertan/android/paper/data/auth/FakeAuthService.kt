@@ -20,9 +20,11 @@ internal class FakeAuthService : AuthService {
     }
 
     override suspend fun logIn(email: String, password: String): Response<Unit> {
-        if (email != user?.email || password != user?.password) {
+        if (email != user?.email) return Response.failure(PaperException.UserNotFound)
+
+        if (email == user?.email && password != user?.password)
             return Response.failure(PaperException.IncorrectInformation)
-        }
+
         currentUser = User(email = email, password = password)
         return Response.success()
     }

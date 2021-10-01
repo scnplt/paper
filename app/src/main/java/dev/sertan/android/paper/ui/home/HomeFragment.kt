@@ -14,7 +14,6 @@ import dev.sertan.android.paper.ui.main.MainActivity
 
 @AndroidEntryPoint
 internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.NoteListener {
-
     private val viewModel by viewModels<HomeViewModel>()
 
     override fun getLayoutRes(): Int = R.layout.fragment_home

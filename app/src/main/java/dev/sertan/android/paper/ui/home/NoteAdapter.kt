@@ -18,9 +18,8 @@ internal class NoteAdapter(private val listener: NoteListener) :
         return NoteViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) =
         holder.bind(getItem(position), listener)
-    }
 
     interface NoteListener {
         fun onNoteClicked(note: Note)

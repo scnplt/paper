@@ -36,13 +36,12 @@ internal class RegisterViewModel @Inject constructor(private val userRepo: UserR
             val response = userRepo.register(email.value!!, password.value!!)
             _isLoading.postValue(false)
 
-            if (response.isFailure()) {
-                view.context.showToast(response.exception?.messageRes)
-                return@launch
+            if (response.isSuccess()) {
+                view.context.showToast(R.string.registration_successful)
+                view.findNavController().popBackStack()
             }
 
-            view.context.showToast(R.string.registration_successful)
-            view.findNavController().popBackStack()
+            view.context.showToast(response.exception?.messageRes)
         }
     }
 
@@ -51,8 +50,8 @@ internal class RegisterViewModel @Inject constructor(private val userRepo: UserR
         val password = password.value!!
         val passwordConfirmation = passwordConfirmation.value!!
 
-        if (password != passwordConfirmation) return false
-        return Validate.email(email) && Validate.password(password)
+        return password == passwordConfirmation
+                && Validate.email(email) && Validate.password(password)
     }
 
 }

@@ -1,11 +1,10 @@
 package dev.sertan.android.paper.data.db
 
+import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.ktx.Firebase
 import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.util.PaperException
 import dev.sertan.android.paper.util.Response
@@ -17,12 +16,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.tasks.await
 
-internal class FirestoreNoteDbService : DbService<Note> {
-    private val collection: CollectionReference by lazy { Firebase.firestore.collection(COLLECTION) }
-
-    companion object {
-        private const val COLLECTION = "notes"
-    }
+internal class FirestoreNoteDbService(firestore: FirebaseFirestore) : DbService<Note> {
+    private val collection: CollectionReference by lazy { firestore.collection(COLLECTION) }
 
     override suspend fun create(data: Note): Response<Unit> {
         return try {
@@ -30,7 +25,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
             Response.success()
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }
@@ -42,7 +37,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
             Response.success()
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }
@@ -54,7 +49,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
             Response.success()
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }
@@ -66,7 +61,7 @@ internal class FirestoreNoteDbService : DbService<Note> {
             Response.success(note)
         } catch (e: PaperException) {
             Response.failure(e)
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: FirebaseException) {
             Response.failure()
         }
     }
@@ -77,8 +72,8 @@ internal class FirestoreNoteDbService : DbService<Note> {
             trySend(Response.loading())
 
             val listenerRegistration =
-                collection.whereEqualTo("userUid", userUid)
-                    .orderBy("updateDate", Query.Direction.DESCENDING)
+                collection.whereEqualTo(Note::userUid.name, userUid)
+                    .orderBy(Note::updateDate.name, Query.Direction.DESCENDING)
                     .addSnapshotListener { value, error ->
                         if (error != null) cancel()
                         val notes =
@@ -88,6 +83,10 @@ internal class FirestoreNoteDbService : DbService<Note> {
 
             awaitClose { listenerRegistration.remove() }
         }.catch { emit(Response.failure()) }
+    }
+
+    companion object {
+        private const val COLLECTION = "notes"
     }
 
 }

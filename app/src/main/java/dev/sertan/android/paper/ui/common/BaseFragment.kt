@@ -10,7 +10,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
 internal abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
-
     lateinit var binding: VDB
 
     @LayoutRes
