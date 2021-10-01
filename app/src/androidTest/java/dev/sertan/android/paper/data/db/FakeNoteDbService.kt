@@ -41,7 +41,7 @@ internal class FakeNoteDbService : DbService<Note> {
             if (mPapers.isEmpty()) throw PaperException.DataNotFound
             emit(Response.success(mPapers))
         }.catch { e ->
-            emit(Response.failure((e as? PaperException) ?: PaperException.Default))
+            emit(Response.failure(e as? PaperException))
         }
     }
 
