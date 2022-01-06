@@ -1,9 +1,6 @@
 package dev.sertan.android.paper.ui.register
 
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
@@ -12,46 +9,53 @@ import dev.sertan.android.paper.R
 import dev.sertan.android.paper.data.repo.UserRepo
 import dev.sertan.android.paper.util.Validate
 import dev.sertan.android.paper.util.showToast
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class RegisterViewModel @Inject constructor(private val userRepo: UserRepo) : ViewModel() {
-    val email = MutableLiveData("")
-    val password = MutableLiveData("")
-    val passwordConfirmation = MutableLiveData("")
+    private var job: Job? = null
 
-    val isRegisterButtonEnable: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-        addSource(email) { value = validateForm() }
-        addSource(password) { value = validateForm() }
-        addSource(passwordConfirmation) { value = validateForm() }
-    }
+    val email = MutableStateFlow("")
+    val password = MutableStateFlow("")
+    val passwordConfirmation = MutableStateFlow("")
 
-    private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> get() = _isLoading
+    val isRegisterButtonEnable: StateFlow<Boolean> =
+        combine(email, password, passwordConfirmation) { _, _, _ ->
+            validateForm()
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
+        )
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> get() = _isLoading
 
     fun register(view: View) {
-        _isLoading.postValue(true)
-        viewModelScope.launch {
-            val response = userRepo.register(email.value!!, password.value!!)
-            _isLoading.postValue(false)
+        job?.cancel()
+        job = viewModelScope.launch {
+            _isLoading.emit(true)
+            val response = userRepo.register(email = email.value, password = password.value)
+            _isLoading.emit(false)
 
-            if (response.isSuccess()) {
-                view.context.showToast(R.string.registration_successful)
+            if (response.isSuccess) {
+                val message = view.context.getString(R.string.registration_successful)
+                view.context.showToast(message)
                 view.findNavController().popBackStack()
             }
 
-            view.context.showToast(response.exception?.messageRes)
+            view.context.showToast(response.exception?.localizedMessage)
         }
     }
 
-    private fun validateForm(): Boolean {
-        val email = email.value!!
-        val password = password.value!!
-        val passwordConfirmation = passwordConfirmation.value!!
-
-        return password == passwordConfirmation
-                && Validate.email(email) && Validate.password(password)
-    }
+    private fun validateForm(): Boolean = password.value == passwordConfirmation.value
+            && Validate.email(email.value) && Validate.password(password.value)
 
 }

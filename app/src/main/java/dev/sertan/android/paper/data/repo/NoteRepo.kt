@@ -1,14 +1,14 @@
 package dev.sertan.android.paper.data.repo
 
-import dev.sertan.android.paper.data.db.DbService
+import dev.sertan.android.paper.data.database.NoteDbService
 import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.util.Response
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
 
 @Singleton
-internal class NoteRepo @Inject constructor(private val dbService: DbService<Note>) {
+internal class NoteRepo @Inject constructor(private val dbService: NoteDbService) {
 
     suspend fun create(note: Note): Response<Unit> = dbService.create(note)
 
@@ -16,8 +16,8 @@ internal class NoteRepo @Inject constructor(private val dbService: DbService<Not
 
     suspend fun update(note: Note): Response<Unit> = dbService.update(note)
 
-    suspend fun getData(uid: String): Response<Note> = dbService.getData(uid)
+    suspend fun getNote(noteUid: String): Response<Note?> = dbService.getNote(noteUid)
 
-    fun getAllData(userUid: String): Flow<Response<List<Note>>> = dbService.getAllData(userUid)
+    fun getNotes(userUid: String): Flow<Response<List<Note>?>> = dbService.getNotes(userUid)
 
 }

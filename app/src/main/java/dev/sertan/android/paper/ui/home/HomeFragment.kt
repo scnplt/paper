@@ -1,25 +1,36 @@
 package dev.sertan.android.paper.ui.home
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import dagger.hilt.android.AndroidEntryPoint
-import dev.sertan.android.paper.R
 import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.databinding.FragmentHomeBinding
-import dev.sertan.android.paper.ui.common.BaseFragment
 import dev.sertan.android.paper.ui.main.MainActivity
 
 @AndroidEntryPoint
-internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.NoteListener {
-    private val viewModel by viewModels<HomeViewModel>()
+internal class HomeFragment : Fragment(), NoteAdapter.NoteListener {
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
-    override fun getLayoutRes(): Int = R.layout.fragment_home
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val viewModel: HomeViewModel by viewModels()
         binding.viewModel = viewModel
         setUpRecyclerView()
 
@@ -34,7 +45,9 @@ internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.N
         findNavController().navigate(direction)
     }
 
-    override fun onNoteSwipedToLeft(position: Int) = viewModel.delete(requireView(), position)
+    override fun onNoteSwipedToLeft(position: Int) {
+        binding.viewModel?.delete(requireView(), position)
+    }
 
     private fun setUpRecyclerView() {
         val noteAdapter = NoteAdapter(this)
@@ -44,6 +57,11 @@ internal class HomeFragment : BaseFragment<FragmentHomeBinding>(), NoteAdapter.N
             adapter = noteAdapter
             ItemTouchHelper(noteSwipeToDeleteCallback).attachToRecyclerView(this)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

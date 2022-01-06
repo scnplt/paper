@@ -8,6 +8,9 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -15,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.NavGraphDirections
 import dev.sertan.android.paper.R
 import dev.sertan.android.paper.databinding.ActivityMainBinding
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 internal class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener {
@@ -59,27 +63,31 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
     fun onFabClicked(listener: View.OnClickListener) = binding.fab.setOnClickListener(listener)
 
     private fun listenObservables() {
-        viewModel.currentUser.observe(this) {
-            if (it.isSuccess() && it.value != null) {
-                val direction = NavGraphDirections.actionGlobalHome()
-                navController.navigate(direction)
-                return@observe
-            }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.currentUser.collect {
+                    if (it.isSuccess && it.value != null) {
+                        val direction = NavGraphDirections.actionGlobalHome()
+                        navController.navigate(direction)
+                        return@collect
+                    }
 
-            if (it.isFailure()) {
-                val direction = NavGraphDirections.actionGlobalLogin()
-                navController.navigate(direction)
-                return@observe
-            }
+                    if (it.isFailure) {
+                        val direction = NavGraphDirections.actionGlobalLogin()
+                        navController.navigate(direction)
+                        return@collect
+                    }
 
-            if (it.isIdle()) {
-                val duration = resources.getInteger(R.integer.duration_animation_3).toLong()
-                val runnable = Runnable {
-                    val direction = NavGraphDirections.actionGlobalLogin()
-                    navController.navigate(direction)
-                    viewModel.refreshUser()
+                    if (it.isIdle) {
+                        val duration = resources.getInteger(R.integer.duration_animation_3).toLong()
+                        val runnable = Runnable {
+                            val direction = NavGraphDirections.actionGlobalLogin()
+                            navController.navigate(direction)
+                            viewModel.refreshUser()
+                        }
+                        Handler(Looper.getMainLooper()).postDelayed(runnable, duration)
+                    }
                 }
-                Handler(Looper.getMainLooper()).postDelayed(runnable, duration)
             }
         }
     }

@@ -9,8 +9,8 @@ import dev.sertan.android.paper.util.showToast
 
 @BindingAdapter("notes")
 internal fun bindNotesToRecyclerView(view: RecyclerView, notesResponse: Response<List<Note>>) {
-    if (notesResponse.isFailure()) {
-        view.context.showToast(notesResponse.exception?.messageRes)
+    if (notesResponse.isFailure) {
+        view.context.showToast(notesResponse.exception?.localizedMessage)
         return
     }
     (view.adapter as? NoteAdapter)?.submitList(notesResponse.value)
