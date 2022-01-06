@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import dev.sertan.android.paper.data.auth.AuthService
-import dev.sertan.android.paper.data.auth.FakeAuthService
+import dev.sertan.android.paper.data.authentication.AuthService
+import dev.sertan.android.paper.data.authentication.FakeAuthService
 import javax.inject.Singleton
 
 @Module
@@ -18,10 +18,6 @@ internal object FakeAuthServiceModule {
         /* To test FirebaseAuthService using Firebase Local Emulator Suite,
         create FirebaseAuth object by entering host and port values and
         return it with FirebaseAuthService. */
-
-        /*val firebaseAuth =
-            FirebaseAuth.getInstance().apply { useEmulator("10.0.2.2", 9099) }
-        return FirebaseAuthService(firebaseAuth)*/
 
         return FakeAuthService()
     }

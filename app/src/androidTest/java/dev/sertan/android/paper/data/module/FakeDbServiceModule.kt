@@ -1,12 +1,13 @@
 package dev.sertan.android.paper.data.module
 
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import dev.sertan.android.paper.data.db.DbService
-import dev.sertan.android.paper.data.db.FakeNoteDbService
-import dev.sertan.android.paper.data.model.Note
+import dev.sertan.android.paper.data.database.FakeNoteDbService
+import dev.sertan.android.paper.data.database.FirestoreNoteDbService
+import dev.sertan.android.paper.data.database.NoteDbService
 import javax.inject.Singleton
 
 @Module
@@ -15,14 +16,10 @@ internal object FakeDbServiceModule {
 
     @Provides
     @Singleton
-    fun provideNoteDbService(): DbService<Note> {
+    fun provideNoteDbService(): NoteDbService {
         /* To test FirestoreNoteDbService using Firebase Local Emulator Suite,
         create FirebaseFirestore object by entering host and port values and
         return it with FirestoreNoteDbService. */
-
-        /*val firestore =
-            FirebaseFirestore.getInstance().apply { useEmulator("10.0.2.2", 8080) }
-        return FirestoreNoteDbService(firestore)*/
 
         return FakeNoteDbService()
     }

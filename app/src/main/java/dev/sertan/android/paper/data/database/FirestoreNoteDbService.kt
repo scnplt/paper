@@ -44,7 +44,7 @@ internal class FirestoreNoteDbService(firestore: FirebaseFirestore) : NoteDbServ
     }
 
     override fun getNotes(userUid: String): Flow<Response<List<Note>?>> = callbackFlow {
-        send(Response.loading())
+        trySend(Response.loading())
         val listenerRegistration = collection.whereEqualTo(Note::userUid.name, userUid)
             .orderBy(Note::updateDate.name, Query.Direction.DESCENDING)
             .addSnapshotListener { value, error ->

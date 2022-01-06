@@ -1,13 +1,12 @@
-package dev.sertan.android.paper.data.db
+package dev.sertan.android.paper.data.database
 
 import dev.sertan.android.paper.data.model.Note
-import dev.sertan.android.paper.util.PaperException
 import dev.sertan.android.paper.util.Response
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
-internal class FakeNoteDbService : DbService<Note> {
+internal class FakeNoteDbService : NoteDbService {
     private val notes = mutableListOf<Note>()
 
     override suspend fun create(data: Note): Response<Unit> {
@@ -16,33 +15,29 @@ internal class FakeNoteDbService : DbService<Note> {
     }
 
     override suspend fun delete(data: Note): Response<Unit> {
-        if (!notes.contains(data)) return Response.failure(PaperException.DataNotFound)
+        if (!notes.contains(data)) return Response.failure()
         notes.remove(data)
         return Response.success()
     }
 
     override suspend fun update(data: Note): Response<Unit> {
         val index = notes.indexOfFirst { it.uid == data.uid }
-        if (index == -1) return Response.failure(PaperException.DataNotFound)
+        if (index == -1) return Response.failure()
         notes[index] = data
         return Response.success()
     }
 
-    override suspend fun getData(uid: String): Response<Note> {
+    override suspend fun getNote(uid: String): Response<Note> {
         val index = notes.indexOfFirst { it.uid == uid }
-        if (index == -1) return Response.failure(PaperException.DataNotFound)
-        return Response.success(notes[index])
+        return Response.success(if (index == -1) null else notes[index])
     }
 
-    override fun getAllData(userUid: String): Flow<Response<List<Note>>> {
+    override fun getNotes(userUid: String): Flow<Response<List<Note>>> {
         return flow {
             emit(Response.loading())
             val mPapers = notes.filter { it.userUid == userUid }
-            if (mPapers.isEmpty()) throw PaperException.DataNotFound
             emit(Response.success(mPapers))
-        }.catch { e ->
-            emit(Response.failure(e as? PaperException))
-        }
+        }.catch { e -> emit(Response.failure(e)) }
     }
 
 }
