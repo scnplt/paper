@@ -6,9 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.sertan.android.paper.data.db.DbService
-import dev.sertan.android.paper.data.db.FirestoreNoteDbService
-import dev.sertan.android.paper.data.model.Note
+import dev.sertan.android.paper.data.database.FirestoreNoteDbService
+import dev.sertan.android.paper.data.database.NoteDbService
 import javax.inject.Singleton
 
 @Module
@@ -17,6 +16,6 @@ internal object DbServiceModule {
 
     @Provides
     @Singleton
-    fun provideNoteDbService(): DbService<Note> = FirestoreNoteDbService(Firebase.firestore)
+    fun provideNoteDbService(): NoteDbService = FirestoreNoteDbService(Firebase.firestore)
 
 }

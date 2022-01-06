@@ -6,8 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.sertan.android.paper.data.auth.AuthService
-import dev.sertan.android.paper.data.auth.FirebaseAuthService
+import dev.sertan.android.paper.data.authentication.AuthService
+import dev.sertan.android.paper.data.authentication.FirebaseAuthService
 import javax.inject.Singleton
 
 @Module

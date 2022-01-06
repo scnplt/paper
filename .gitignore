@@ -47,3 +47,7 @@ lint/tmp/
 app/google-services.json
 
 firebase-tools.exe
+firebase.json
+firestore.rules
+firestore.indexes.json
+.firebaserc
