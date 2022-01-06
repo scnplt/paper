@@ -32,7 +32,7 @@ internal class HomeViewModel @Inject constructor(
         emitAll(result)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS),
         initialValue = Response.idle()
     )
 
@@ -40,7 +40,7 @@ internal class HomeViewModel @Inject constructor(
         emit(it.value.isNullOrEmpty())
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS),
         initialValue = true
     )
 
@@ -68,6 +68,10 @@ internal class HomeViewModel @Inject constructor(
             }
             lastDeletedNote = null
         }
+    }
+
+    companion object {
+        private const val STOP_TIMEOUT_MS = 5000L
     }
 
 }

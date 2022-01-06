@@ -1,5 +1,6 @@
 package dev.sertan.android.paper.data.database
 
+import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -18,28 +19,28 @@ internal class FirestoreNoteDbService(firestore: FirebaseFirestore) : NoteDbServ
     override suspend fun create(data: Note): Response<Unit> = try {
         collection.document(data.uid).set(data).await()
         Response.success()
-    } catch (e: Exception) {
+    } catch (e: FirebaseException) {
         Response.failure(e)
     }
 
     override suspend fun delete(data: Note): Response<Unit> = try {
         collection.document(data.uid).delete().await()
         Response.success()
-    } catch (e: Exception) {
+    } catch (e: FirebaseException) {
         Response.failure(e)
     }
 
     override suspend fun update(data: Note): Response<Unit> = try {
         collection.document(data.uid).set(data).await()
         Response.success()
-    } catch (e: Exception) {
+    } catch (e: FirebaseException) {
         Response.failure(e)
     }
 
     override suspend fun getNote(uid: String): Response<Note?> = try {
         val document = collection.document(uid).get().await()
         Response.success(document.toObject<Note>())
-    } catch (e: Exception) {
+    } catch (e: FirebaseException) {
         Response.failure(e)
     }
 

@@ -31,7 +31,7 @@ internal class RegisterViewModel @Inject constructor(private val userRepo: UserR
             validateForm()
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS),
             initialValue = false
         )
 
@@ -57,5 +57,9 @@ internal class RegisterViewModel @Inject constructor(private val userRepo: UserR
 
     private fun validateForm(): Boolean = password.value == passwordConfirmation.value
             && Validate.email(email.value) && Validate.password(password.value)
+
+    companion object {
+        private const val STOP_TIMEOUT_MS = 5000L
+    }
 
 }

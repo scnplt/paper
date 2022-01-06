@@ -1,7 +1,6 @@
 package dev.sertan.android.paper.data.database
 
 import androidx.test.filters.SmallTest
-import androidx.test.internal.runner.TestExecutor
 import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

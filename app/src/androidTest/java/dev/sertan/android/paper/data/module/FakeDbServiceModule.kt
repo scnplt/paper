@@ -1,12 +1,10 @@
 package dev.sertan.android.paper.data.module
 
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import dev.sertan.android.paper.data.database.FakeNoteDbService
-import dev.sertan.android.paper.data.database.FirestoreNoteDbService
 import dev.sertan.android.paper.data.database.NoteDbService
 import javax.inject.Singleton
 
