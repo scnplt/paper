@@ -32,10 +32,7 @@ internal class LoginViewModel @Inject constructor(private val userRepo: UserRepo
         logInJob = viewModelScope.launch {
             val response = userRepo.logIn(email = email, password = password)
             _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    message = Single(response.exception?.localizedMessage)
-                )
+                it.copy(isLoading = false, message = Single(response.exception?.localizedMessage))
             }
         }
     }

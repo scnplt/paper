@@ -57,9 +57,7 @@ internal class HomeViewModel @Inject constructor(
             val response = noteRepo.create(lastDeletedNote ?: return@launch)
             if (response.isSuccess) lastDeletedNote = null
 
-            _uiState.update {
-                it.copy(message = Single(response.exception?.localizedMessage))
-            }
+            _uiState.update { it.copy(message = Single(response.exception?.localizedMessage)) }
         }
     }
 

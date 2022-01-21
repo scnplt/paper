@@ -55,7 +55,10 @@ internal class HomeFragment : Fragment(), NoteAdapter.NoteListener {
                 homeViewModel.uiState.collect { uiState ->
                     if (uiState.noteDeleted.value == true) {
                         Snackbar.make(requireView(), R.string.note_deleted, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.undo) { homeViewModel.undoDelete() }.show()
+                            .apply {
+                                setAction(R.string.undo) { homeViewModel.undoDelete() }
+                                setAnchorView(R.id.fab)
+                            }.show()
                     }
 
                     uiState.message.value?.let { requireContext().showToast(it) }

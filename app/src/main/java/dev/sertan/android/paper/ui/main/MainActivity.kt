@@ -4,9 +4,11 @@ import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +16,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_END
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.NavGraphDirections
 import dev.sertan.android.paper.R
@@ -21,7 +25,9 @@ import dev.sertan.android.paper.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-internal class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener {
+internal class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener,
+    Toolbar.OnMenuItemClickListener {
+
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel>()
 
@@ -29,14 +35,18 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
 
-        navHostFragment.navController
-            .apply { addOnDestinationChangedListener(this@MainActivity) }
+        navHostFragment.navController.apply { addOnDestinationChangedListener(this@MainActivity) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.bottomAppBar.setOnMenuItemClickListener(this)
         subscribeUi()
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        TODO("Not yet implemented")
     }
 
     override fun onDestinationChanged(
@@ -44,18 +54,38 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
         destination: NavDestination,
         arguments: Bundle?,
     ) {
-        binding.fab.hide()
+        setUpBottomAppBar(destination.id)
+        setUpFab(destination.id)
+    }
 
-        val iconId = when (destination.id) {
+    private fun setUpBottomAppBar(destinationId: Int) = binding.bottomAppBar.run {
+        performHide()
+        visibility = View.INVISIBLE
+
+        val (alignment, menu) = when (destinationId) {
+            R.id.addNoteFragment -> FAB_ALIGNMENT_MODE_END to R.menu.note_bottom_appbar
+            R.id.editNoteFragment -> FAB_ALIGNMENT_MODE_END to R.menu.note_bottom_appbar
+            R.id.homeFragment -> FAB_ALIGNMENT_MODE_CENTER to R.menu.home_bottom_appbar
+            R.id.noteFragment -> FAB_ALIGNMENT_MODE_END to R.menu.note_bottom_appbar
+            else -> return
+        }
+        setFabAlignmentModeAndReplaceMenu(alignment, menu)
+        visibility = View.VISIBLE
+        performShow()
+    }
+
+    private fun setUpFab(destinationId: Int) = binding.fab.run {
+        hide()
+
+        val iconId = when (destinationId) {
             R.id.addNoteFragment -> R.drawable.ic_done
             R.id.editNoteFragment -> R.drawable.ic_done
             R.id.homeFragment -> R.drawable.ic_add
             R.id.noteFragment -> R.drawable.ic_edit
             else -> return
         }
-
-        val icon = Icon.createWithResource(this, iconId)
-        binding.fab.apply { setImageIcon(icon) }.show()
+        setImageIcon(Icon.createWithResource(this@MainActivity, iconId))
+        show()
     }
 
     fun onFabClicked(listener: View.OnClickListener) = binding.fab.setOnClickListener(listener)
@@ -67,14 +97,10 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
                     when {
                         it.isSuccess && it.value != null -> navigateToHome()
                         it.isFailure -> navigateToLogin()
-                        it.isIdle -> {
-                            val duration =
-                                resources.getInteger(R.integer.duration_animation_3).toLong()
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                navigateToLogin()
-                                viewModel.refreshUser()
-                            }, duration)
-                        }
+                        it.isIdle -> Handler(Looper.getMainLooper()).postDelayed({
+                            navigateToLogin()
+                            viewModel.refreshUser()
+                        }, resources.getInteger(R.integer.duration_animation_3).toLong())
                     }
                 }
             }

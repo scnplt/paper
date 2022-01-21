@@ -6,10 +6,10 @@ import java.util.*
 
 @Parcelize
 data class Note(
-        var title: String = "",
-        var content: String = "",
-        var userUid: String = "",
-        var updateDate: Long = System.currentTimeMillis(),
-        var createDate: Long = System.currentTimeMillis(),
-        var uid: String = UUID.randomUUID().toString(),
+    var title: String = "",
+    var content: String = "",
+    var userUid: String = "",
+    var updateDate: Long = System.currentTimeMillis(),
+    var createDate: Long = System.currentTimeMillis(),
+    var uid: String = UUID.randomUUID().toString(),
 ) : Parcelable
