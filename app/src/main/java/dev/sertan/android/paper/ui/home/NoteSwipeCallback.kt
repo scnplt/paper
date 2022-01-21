@@ -10,12 +10,11 @@ internal class NoteSwipeCallback(private val listener: NoteAdapter.NoteListener)
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
+        target: RecyclerView.ViewHolder,
     ): Boolean = false
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
         listener.onNoteSwipedToLeft(position)
     }
-
 }

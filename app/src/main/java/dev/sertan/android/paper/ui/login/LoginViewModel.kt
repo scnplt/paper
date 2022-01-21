@@ -1,79 +1,60 @@
 package dev.sertan.android.paper.ui.login
 
-import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.findNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sertan.android.paper.R
 import dev.sertan.android.paper.data.repo.UserRepo
-import dev.sertan.android.paper.util.Validate
-import dev.sertan.android.paper.util.showToast
-import javax.inject.Inject
+import dev.sertan.android.paper.util.Single
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+private const val EMAIL_DELAY_MS = 8000L
 
 @HiltViewModel
 internal class LoginViewModel @Inject constructor(private val userRepo: UserRepo) : ViewModel() {
-    private var job: Job? = null
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState = _uiState.asStateFlow()
 
-    val email = MutableStateFlow("")
-    val password = MutableStateFlow("")
+    private var logInJob: Job? = null
+    private var lastEmailSentTimeMs = 0L
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> get() = _isLoading
+    fun logIn() {
+        logInJob?.cancel()
+        val email = uiState.value.email
+        val password = uiState.value.password
 
-    val isLoginButtonEnable: StateFlow<Boolean> = email.combine(password) { _, _ ->
-        validateForm()
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS),
-        initialValue = false
-    )
-
-    fun login(view: View) {
-        job?.cancel()
-        job = viewModelScope.launch {
-            _isLoading.emit(true)
-            val response = userRepo.logIn(email = email.value, password = password.value)
-            _isLoading.emit(false)
-
-            view.context.showToast(response.exception?.localizedMessage)
+        _uiState.update { it.copy(isLoading = true) }
+        logInJob = viewModelScope.launch {
+            val response = userRepo.logIn(email = email, password = password)
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    message = Single(response.exception?.localizedMessage)
+                )
+            }
         }
     }
 
-    fun register(view: View) {
-        val direction = LoginFragmentDirections.actionLoginToRegister()
-        view.findNavController().navigate(direction)
-    }
+    fun recoverPassword() {
+        val now = System.currentTimeMillis()
+        if ((now - lastEmailSentTimeMs) < EMAIL_DELAY_MS) return
 
-    fun recoverPassword(view: View) {
-        if (!Validate.email(email.value)) {
-            val message = view.context.getString(R.string.invalid_email_message)
-            view.context.showToast(message)
-            return
-        }
+        val email = uiState.value.email
+        lastEmailSentTimeMs = now
 
         viewModelScope.launch {
-            val response = userRepo.sendResetPasswordEmail(email.value)
-            if (response.isSuccess) {
-                val message = view.context.getString(R.string.send_password_recovery_email)
-                view.context.showToast(message)
+            val response = userRepo.sendResetPasswordEmail(email)
+            _uiState.update {
+                when {
+                    response.isFailure -> it.copy(message = Single(response.exception?.localizedMessage))
+                    else -> it.copy(messageRes = Single(R.string.send_password_recovery_email))
+                }
             }
-            view.context.showToast(response.exception?.localizedMessage)
         }
     }
-
-    private fun validateForm(): Boolean =
-        Validate.email(email.value) && Validate.password(password.value)
-
-    companion object {
-        private const val STOP_TIMEOUT_MS = 5000L
-    }
-
 }

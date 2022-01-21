@@ -10,5 +10,4 @@ object Utils {
 
     @JvmStatic
     fun timestampToSimpleDate(value: Long): String = simpleDateFormat.format(Date(value))
-
 }

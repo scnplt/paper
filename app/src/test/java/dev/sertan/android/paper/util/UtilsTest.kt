@@ -11,5 +11,4 @@ internal class UtilsTest {
         val simpleDate = Utils.timestampToSimpleDate(timestamp)
         Truth.assertThat(simpleDate).isEqualTo("12/12/2012")
     }
-
 }

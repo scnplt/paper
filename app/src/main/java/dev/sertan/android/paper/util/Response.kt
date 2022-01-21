@@ -20,5 +20,4 @@ internal sealed class Response<out T>(
         fun failure(e: Throwable? = null): Failure = Failure(e)
         fun <T> success(data: T? = null): Success<T> = Success(data)
     }
-
 }

@@ -35,16 +35,14 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.activity_main, null, false)
-        setContentView(binding.root)
-
-        listenObservables()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        subscribeUi()
     }
 
     override fun onDestinationChanged(
         controller: NavController,
         destination: NavDestination,
-        arguments: Bundle?
+        arguments: Bundle?,
     ) {
         binding.fab.hide()
 
@@ -62,34 +60,34 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
 
     fun onFabClicked(listener: View.OnClickListener) = binding.fab.setOnClickListener(listener)
 
-    private fun listenObservables() {
+    private fun subscribeUi() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.currentUser.collect {
-                    if (it.isSuccess && it.value != null) {
-                        val direction = NavGraphDirections.actionGlobalHome()
-                        navController.navigate(direction)
-                        return@collect
-                    }
-
-                    if (it.isFailure) {
-                        val direction = NavGraphDirections.actionGlobalLogin()
-                        navController.navigate(direction)
-                        return@collect
-                    }
-
-                    if (it.isIdle) {
-                        val duration = resources.getInteger(R.integer.duration_animation_3).toLong()
-                        val runnable = Runnable {
-                            val direction = NavGraphDirections.actionGlobalLogin()
-                            navController.navigate(direction)
-                            viewModel.refreshUser()
+                    when {
+                        it.isSuccess && it.value != null -> navigateToHome()
+                        it.isFailure -> navigateToLogin()
+                        it.isIdle -> {
+                            val duration =
+                                resources.getInteger(R.integer.duration_animation_3).toLong()
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                navigateToLogin()
+                                viewModel.refreshUser()
+                            }, duration)
                         }
-                        Handler(Looper.getMainLooper()).postDelayed(runnable, duration)
                     }
                 }
             }
         }
     }
 
+    private fun navigateToHome() {
+        val direction = NavGraphDirections.actionGlobalHome()
+        navController.navigate(direction)
+    }
+
+    private fun navigateToLogin() {
+        val direction = NavGraphDirections.actionGlobalLogin()
+        navController.navigate(direction)
+    }
 }

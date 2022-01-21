@@ -12,5 +12,4 @@ internal class HiltTestRunner : AndroidJUnitRunner() {
         className: String?,
         context: Context?
     ): Application = super.newApplication(cl, HiltTestApplication::class.java.name, context)
-
 }

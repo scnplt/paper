@@ -17,5 +17,4 @@ internal object DbServiceModule {
     @Provides
     @Singleton
     fun provideNoteDbService(): NoteDbService = FirestoreNoteDbService(Firebase.firestore)
-
 }

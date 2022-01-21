@@ -5,11 +5,13 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="viewModel"
             type="dev.sertan.android.paper.ui.login.LoginViewModel" />
+
+        <variable
+            name="callback"
+            type="dev.sertan.android.paper.ui.login.LoginCallback" />
 
     </data>
 
@@ -43,10 +45,11 @@
             app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:text="@={viewModel.email}" />
+                android:text="@={viewModel.uiState.email}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -63,18 +66,19 @@
             app:layout_constraintTop_toBottomOf="@id/textLayoutEmail">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:text="@={viewModel.password}" />
+                android:text="@={viewModel.uiState.password}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
+            gone="@{!viewModel.uiState.isLoading}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
             app:indicatorColor="?attr/colorOnSurface"
             app:layout_constraintBottom_toBottomOf="@id/buttonLogin"
             app:layout_constraintEnd_toEndOf="parent"
@@ -84,13 +88,12 @@
 
         <Button
             android:id="@+id/buttonLogin"
+            invisible="@{viewModel.uiState.isLoading}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_2"
-            android:enabled="@{viewModel.isLoginButtonEnable}"
-            android:onClick="@{viewModel::login}"
+            android:onClick="@{() -> callback.onLoginClick()}"
             android:text="@string/log_in"
-            android:visibility="@{viewModel.isLoading ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/textViewRegister"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_2"
             android:layout_marginBottom="@dimen/gap_2"
-            android:onClick="@{viewModel::register}"
+            android:onClick="@{() -> callback.onRegisterClick()}"
             android:text="@string/register"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintBottom_toTopOf="@id/textViewForgotPassword"
@@ -114,7 +117,7 @@
             android:id="@+id/textViewForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{viewModel::recoverPassword}"
+            android:onClick="@{() -> callback.onRecoverPasswordClick()}"
             android:text="@string/forgot_password"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintBottom_toBottomOf="parent"

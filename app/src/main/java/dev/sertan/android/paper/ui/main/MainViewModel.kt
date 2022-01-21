@@ -6,10 +6,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sertan.android.paper.data.model.User
 import dev.sertan.android.paper.data.repo.UserRepo
 import dev.sertan.android.paper.util.Response
-import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 internal class MainViewModel @Inject constructor(private val userRepo: UserRepo) : ViewModel() {
@@ -18,8 +18,6 @@ internal class MainViewModel @Inject constructor(private val userRepo: UserRepo)
 
     fun refreshUser() {
         job?.cancel()
-        job = viewModelScope.launch {
-            userRepo.refreshCurrentUser()
-        }
+        job = viewModelScope.launch { userRepo.refreshCurrentUser() }
     }
 }

@@ -31,5 +31,4 @@ internal class UserRepo @Inject constructor(private val authService: AuthService
 
     suspend fun sendResetPasswordEmail(email: String): Response<Unit> =
         authService.sendResetPasswordEmail(email)
-
 }

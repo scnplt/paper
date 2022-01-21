@@ -26,13 +26,12 @@ internal class NoteFragment : Fragment() {
     ): View {
         _binding = FragmentNoteBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.note = note
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.note = note
-
         (requireActivity() as? MainActivity)?.onFabClicked {
             val direction = NoteFragmentDirections.actionNoteToEditNote(note)
             findNavController().navigate(direction)
@@ -43,5 +42,4 @@ internal class NoteFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

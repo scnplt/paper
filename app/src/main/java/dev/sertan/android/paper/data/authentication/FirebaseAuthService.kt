@@ -50,5 +50,4 @@ internal class FirebaseAuthService(private val auth: FirebaseAuth) : AuthService
     } catch (e: FirebaseException) {
         Response.failure(e)
     }
-
 }

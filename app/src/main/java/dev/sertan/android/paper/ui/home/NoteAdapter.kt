@@ -25,5 +25,4 @@ internal class NoteAdapter(private val listener: NoteListener) :
         fun onNoteClicked(note: Note)
         fun onNoteSwipedToLeft(position: Int)
     }
-
 }

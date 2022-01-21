@@ -87,5 +87,4 @@ internal class NoteDbServiceTest {
         Truth.assertThat(response.value).isEmpty()
         Truth.assertThat(response.exception).isNull()
     }
-
 }

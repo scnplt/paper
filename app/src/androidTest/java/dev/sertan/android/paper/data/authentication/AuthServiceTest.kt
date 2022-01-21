@@ -157,5 +157,4 @@ internal class AuthServiceTest {
             authService.deleteAccount()
         }
     }
-
 }

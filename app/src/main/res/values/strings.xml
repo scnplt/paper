@@ -4,7 +4,9 @@
     <string name="undo">Undo</string>
 
     <!-- Info messages -->
-    <string name="invalid_email_message">Invalid email address!</string>
+    <string name="invalid_email">Invalid email address!</string>
+    <string name="invalid_pwd">Password must be at least 8 characters!</string>
+    <string name="invalid_pwd_confirm">Passwords must be the same!</string>
 
     <!-- Splash Fragment -->
     <string name="location_splash_animation">lottie/splash.json</string>
