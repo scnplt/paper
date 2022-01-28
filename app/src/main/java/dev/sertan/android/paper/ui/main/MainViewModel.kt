@@ -20,4 +20,8 @@ internal class MainViewModel @Inject constructor(private val userRepo: UserRepo)
         job?.cancel()
         job = viewModelScope.launch { userRepo.refreshCurrentUser() }
     }
+
+    fun logOut() {
+        viewModelScope.launch { userRepo.logOut() }
+    }
 }

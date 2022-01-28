@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.NavGraphDirections
 import dev.sertan.android.paper.R
 import dev.sertan.android.paper.databinding.ActivityMainBinding
+import dev.sertan.android.paper.util.showToast
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -32,10 +33,8 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
     private val viewModel by viewModels<MainViewModel>()
 
     private val navController by lazy {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-
-        navHostFragment.navController.apply { addOnDestinationChangedListener(this@MainActivity) }
+        (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment)
+            .navController.apply { addOnDestinationChangedListener(this@MainActivity) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +45,16 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
-        TODO("Not yet implemented")
+        // TODO Not yet implemented
+        when (item?.itemId) {
+            R.id.delete -> showToast("delete clicked")
+            R.id.archive -> showToast("archive clicked")
+            R.id.favorite -> showToast("favorite clicked")
+            R.id.search -> showToast("search clicked")
+            R.id.logOut -> viewModel.logOut()
+            else -> return false
+        }
+        return true
     }
 
     override fun onDestinationChanged(
@@ -59,15 +67,16 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
     }
 
     private fun setUpBottomAppBar(destinationId: Int) = binding.bottomAppBar.run {
-        performHide()
-        visibility = View.INVISIBLE
-
         val (alignment, menu) = when (destinationId) {
             R.id.addNoteFragment -> FAB_ALIGNMENT_MODE_END to R.menu.note_bottom_appbar
             R.id.editNoteFragment -> FAB_ALIGNMENT_MODE_END to R.menu.note_bottom_appbar
             R.id.homeFragment -> FAB_ALIGNMENT_MODE_CENTER to R.menu.home_bottom_appbar
             R.id.noteFragment -> FAB_ALIGNMENT_MODE_END to R.menu.note_bottom_appbar
-            else -> return
+            else -> {
+                performHide()
+                visibility = View.INVISIBLE
+                return@run
+            }
         }
         setFabAlignmentModeAndReplaceMenu(alignment, menu)
         visibility = View.VISIBLE
@@ -75,14 +84,15 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
     }
 
     private fun setUpFab(destinationId: Int) = binding.fab.run {
-        hide()
-
         val iconId = when (destinationId) {
             R.id.addNoteFragment -> R.drawable.ic_done
             R.id.editNoteFragment -> R.drawable.ic_done
             R.id.homeFragment -> R.drawable.ic_add
             R.id.noteFragment -> R.drawable.ic_edit
-            else -> return
+            else -> {
+                hide()
+                return@run
+            }
         }
         setImageIcon(Icon.createWithResource(this@MainActivity, iconId))
         show()
@@ -91,12 +101,13 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
     fun onFabClicked(listener: View.OnClickListener) = binding.fab.setOnClickListener(listener)
 
     private fun subscribeUi() {
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.currentUser.collect {
                     when {
                         it.isSuccess && it.value != null -> navigateToHome()
-                        it.isFailure -> navigateToLogin()
+                        it.isFailure || it.value == null -> navigateToLogin()
                         it.isIdle -> Handler(Looper.getMainLooper()).postDelayed({
                             navigateToLogin()
                             viewModel.refreshUser()
