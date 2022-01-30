@@ -61,21 +61,31 @@ internal class RegisterFragment : Fragment(), RegisterCallback {
         _binding = null
     }
 
-    override fun onRegisterClick(): Unit = with(binding) {
-        when {
-            !editTextEmail.text.toString().let(Validate::email) -> {
-                editTextEmail.error = resources.getString(R.string.invalid_email)
-                editTextEmail.requestFocus()
-            }
-            !editTextPassword.text.toString().let(Validate::password) -> {
-                editTextPassword.error = resources.getString(R.string.invalid_pwd)
-                editTextPassword.requestFocus()
-            }
-            editTextPassword.text.toString() != editTextPasswordConfirm.text.toString() -> {
-                editTextPasswordConfirm.error = resources.getString(R.string.invalid_pwd_confirm)
-                editTextPasswordConfirm.requestFocus()
-            }
-            else -> registerViewModel.register()
+    override fun onRegisterClick() {
+        if (checkEmailAddress() && checkPassword() && checkPasswordConfirm()) {
+            registerViewModel.register()
         }
     }
+
+    private fun checkEmailAddress(): Boolean = with(binding) {
+        return Validate.email("${editTextEmail.text}").also { isValid ->
+            textLayoutEmail.error =
+                resources.getString(R.string.invalid_email).takeUnless { isValid }
+        }
+    }
+
+    private fun checkPassword(): Boolean = with(binding) {
+        Validate.password("${editTextPassword.text}").also { isValid ->
+            textLayoutPassword.error =
+                resources.getString(R.string.invalid_pwd).takeUnless { isValid }
+        }
+    }
+
+    private fun checkPasswordConfirm(): Boolean = with(binding) {
+        return editTextPassword.text.contentEquals(editTextPasswordConfirm.text).also { isValid ->
+            textLayoutPasswordConfirmation.error =
+                resources.getString(R.string.invalid_pwd_confirm).takeUnless { isValid }
+        }
+    }
+
 }

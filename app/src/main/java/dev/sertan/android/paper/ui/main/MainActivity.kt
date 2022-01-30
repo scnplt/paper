@@ -67,30 +67,38 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
         arguments: Bundle?,
     ) = binding.run {
         when (destination.id) {
-            R.id.noteFragment -> {
-                val args = arguments?.let { NoteFragmentArgs.fromBundle(it) }
-                currentNote = args?.note
-                val icon = R.drawable.ic_done
-                    .takeUnless { args?.screenMode == ScreenMode.GET } ?: R.drawable.ic_edit
-                fab.setImageResource(icon)
-                bottomAppBar.setFabAlignmentModeAndReplaceMenu(FAB_ALIGNMENT_MODE_END, R.menu.note)
-            }
             R.id.homeFragment -> {
                 currentNote = null
                 fab.setImageResource(R.drawable.ic_add)
                 bottomAppBar
                     .setFabAlignmentModeAndReplaceMenu(FAB_ALIGNMENT_MODE_CENTER, R.menu.home)
+                showBottomBar()
+                fab.show()
+            }
+            R.id.noteFragment -> {
+                val args = NoteFragmentArgs.fromBundle(arguments!!)
+                currentNote = args.note
+                if (args.screenMode == ScreenMode.GET) {
+                    fab.setImageResource(R.drawable.ic_edit)
+                    bottomAppBar
+                        .setFabAlignmentModeAndReplaceMenu(FAB_ALIGNMENT_MODE_END, R.menu.note)
+                    showBottomBar()
+                } else {
+                    bottomAppBar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
+                    fab.setImageResource(R.drawable.ic_done)
+                    hideBottomBar()
+                }
+                fab.show()
             }
             else -> {
                 currentNote = null
-                return@run hideBottomBar()
+                fab.hide()
+                hideBottomBar()
             }
         }
-        showBottomBar()
     }
 
     private fun hideBottomBar() {
-        binding.fab.hide()
         binding.bottomAppBar.performHide()
         binding.bottomAppBar.visibility = View.INVISIBLE
     }
@@ -98,7 +106,6 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
     private fun showBottomBar() {
         binding.bottomAppBar.visibility = View.VISIBLE
         binding.bottomAppBar.performShow()
-        binding.fab.show()
     }
 
     fun onFabClicked(listener: View.OnClickListener) = binding.fab.setOnClickListener(listener)

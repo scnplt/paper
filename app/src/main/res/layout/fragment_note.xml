@@ -61,12 +61,13 @@
                 android:enabled="@{viewModel.editable}"
                 android:hint="@string/title"
                 android:importantForAutofill="no"
-                android:inputType="text"
+                android:inputType="textMultiLine"
+                android:maxLength="50"
                 android:text="@={viewModel.note.title}"
                 android:textAlignment="center"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 tools:ignore="LabelFor"
-                tools:text="@tools:sample/lorem" />
+                tools:text="@tools:sample/lorem/random" />
 
             <EditText
                 android:id="@+id/editTextContent"
@@ -75,10 +76,14 @@
                 android:layout_marginTop="@dimen/gap_2"
                 android:background="@android:color/transparent"
                 android:enabled="@{viewModel.editable}"
+                android:gravity="start"
                 android:hint="@string/content"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
+                android:maxLength="3000"
+                android:minHeight="@dimen/gap_40"
                 android:text="@={viewModel.note.content}"
+                android:textAlignment="gravity"
                 android:textAppearance="?attr/textAppearanceBody1"
                 tools:ignore="LabelFor"
                 tools:text="@tools:sample/lorem/random" />

@@ -7,5 +7,6 @@
     <dimen name="gap_2">16dp</dimen>
     <dimen name="gap_3">24dp</dimen>
     <dimen name="gap_9">72dp</dimen>
+    <dimen name="gap_40">320dp</dimen>
 
 </resources>
