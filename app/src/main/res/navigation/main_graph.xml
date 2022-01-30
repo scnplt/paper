@@ -23,13 +23,6 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/action_home_to_addNote"
-            app:destination="@id/addNoteFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -54,36 +47,22 @@
 
     <fragment
         android:id="@+id/noteFragment"
-        android:name="dev.sertan.android.paper.ui.NoteFragment"
+        android:name="dev.sertan.android.paper.ui.note.NoteFragment"
         android:label="NoteFragment"
         tools:layout="@layout/fragment_note">
         <argument
             android:name="note"
-            app:argType="dev.sertan.android.paper.data.model.Note" />
+            android:defaultValue="@null"
+            app:argType="dev.sertan.android.paper.data.model.Note"
+            app:nullable="true" />
         <action
-            android:id="@+id/action_note_to_editNote"
-            app:destination="@id/editNoteFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/editNoteFragment"
-        android:name="dev.sertan.android.paper.ui.editnote.EditNoteFragment"
-        android:label="EditNoteFragment"
-        tools:layout="@layout/fragment_edit_note">
+            android:id="@+id/action_note_self"
+            app:destination="@id/noteFragment" />
         <argument
-            android:name="note"
-            app:argType="dev.sertan.android.paper.data.model.Note" />
+            android:name="screenMode"
+            android:defaultValue="GET"
+            app:argType="dev.sertan.android.paper.ui.note.ScreenMode" />
     </fragment>
-
-    <fragment
-        android:id="@+id/addNoteFragment"
-        android:name="dev.sertan.android.paper.ui.addnote.AddNoteFragment"
-        android:label="AddNoteFragment"
-        tools:layout="@layout/fragment_add_note" />
 
     <action
         android:id="@+id/action_global_login"
@@ -100,6 +79,5 @@
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popUpTo="@id/nav_graph"
         app:popUpToInclusive="true" />
-
 
 </navigation>

@@ -7,8 +7,8 @@
         <import type="dev.sertan.android.paper.util.Utils" />
 
         <variable
-            name="note"
-            type="dev.sertan.android.paper.data.model.Note" />
+            name="viewModel"
+            type="dev.sertan.android.paper.ui.note.NoteViewModel" />
 
     </data>
 
@@ -25,6 +25,7 @@
             android:paddingBottom="@dimen/gap_9">
 
             <LinearLayout
+                gone="@{viewModel.editable}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/gap_2"
@@ -34,7 +35,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{@string/last_update_date(Utils.timestampToSimpleDate(note.updateDate))}"
+                    android:text="@{@string/last_update_date(viewModel.updateDate)}"
                     android:textAlignment="textStart"
                     android:textAppearance="?attr/textAppearanceBody2"
                     tools:text="Last update\n02/01/2021" />
@@ -43,29 +44,43 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{@string/create_date(Utils.timestampToSimpleDate(note.createDate))}"
+                    android:text="@{@string/create_date(viewModel.createDate)}"
                     android:textAlignment="textEnd"
                     android:textAppearance="?attr/textAppearanceBody2"
                     tools:text="Create\n01/01/2021" />
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/editTextTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/gap_3"
-                android:text="@{note.title}"
+                android:background="@android:color/transparent"
+                android:enabled="@{viewModel.editable}"
+                android:hint="@string/title"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:text="@={viewModel.note.title}"
                 android:textAlignment="center"
                 android:textAppearance="?attr/textAppearanceHeadline4"
+                tools:ignore="LabelFor"
                 tools:text="@tools:sample/lorem" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/editTextContent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/gap_2"
-                android:text="@{note.content}"
+                android:background="@android:color/transparent"
+                android:enabled="@{viewModel.editable}"
+                android:hint="@string/content"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:text="@={viewModel.note.content}"
                 android:textAppearance="?attr/textAppearanceBody1"
+                tools:ignore="LabelFor"
                 tools:text="@tools:sample/lorem/random" />
 
         </LinearLayout>

@@ -1,6 +1,5 @@
 package dev.sertan.android.paper.ui.main
 
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,10 +17,14 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
 import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_END
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sertan.android.paper.NavGraphDirections
 import dev.sertan.android.paper.R
+import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.databinding.ActivityMainBinding
+import dev.sertan.android.paper.ui.note.NoteFragmentArgs
+import dev.sertan.android.paper.ui.note.ScreenMode
 import dev.sertan.android.paper.util.showToast
 import kotlinx.coroutines.launch
 
@@ -37,6 +40,8 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
             .navController.apply { addOnDestinationChangedListener(this@MainActivity) }
     }
 
+    private var currentNote: Note? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -45,12 +50,11 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
-        // TODO Not yet implemented
         when (item?.itemId) {
-            R.id.delete -> showToast("delete clicked")
-            R.id.archive -> showToast("archive clicked")
-            R.id.favorite -> showToast("favorite clicked")
-            R.id.search -> showToast("search clicked")
+            R.id.delete -> currentNote?.let { viewModel.deleteNote(it) }
+            R.id.archive -> showToast("archive clicked - note: ${currentNote?.title}")
+            R.id.favorite -> showToast("favorite clicked - note: ${currentNote?.title}")
+            R.id.search -> showToast("search clicked - note: ${currentNote?.title}")
             R.id.logOut -> viewModel.logOut()
             else -> return false
         }
@@ -61,58 +65,76 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
         controller: NavController,
         destination: NavDestination,
         arguments: Bundle?,
-    ) {
-        setUpBottomAppBar(destination.id)
-        setUpFab(destination.id)
-    }
-
-    private fun setUpBottomAppBar(destinationId: Int) = binding.bottomAppBar.run {
-        val (alignment, menu) = when (destinationId) {
-            R.id.addNoteFragment -> FAB_ALIGNMENT_MODE_END to R.menu.note_bottom_appbar
-            R.id.editNoteFragment -> FAB_ALIGNMENT_MODE_END to R.menu.note_bottom_appbar
-            R.id.homeFragment -> FAB_ALIGNMENT_MODE_CENTER to R.menu.home_bottom_appbar
-            R.id.noteFragment -> FAB_ALIGNMENT_MODE_END to R.menu.note_bottom_appbar
+    ) = binding.run {
+        when (destination.id) {
+            R.id.noteFragment -> {
+                val args = arguments?.let { NoteFragmentArgs.fromBundle(it) }
+                currentNote = args?.note
+                val icon = R.drawable.ic_done
+                    .takeUnless { args?.screenMode == ScreenMode.GET } ?: R.drawable.ic_edit
+                fab.setImageResource(icon)
+                bottomAppBar.setFabAlignmentModeAndReplaceMenu(FAB_ALIGNMENT_MODE_END, R.menu.note)
+            }
+            R.id.homeFragment -> {
+                currentNote = null
+                fab.setImageResource(R.drawable.ic_add)
+                bottomAppBar
+                    .setFabAlignmentModeAndReplaceMenu(FAB_ALIGNMENT_MODE_CENTER, R.menu.home)
+            }
             else -> {
-                performHide()
-                visibility = View.INVISIBLE
-                return@run
+                currentNote = null
+                return@run hideBottomBar()
             }
         }
-        setFabAlignmentModeAndReplaceMenu(alignment, menu)
-        visibility = View.VISIBLE
-        performShow()
+        showBottomBar()
     }
 
-    private fun setUpFab(destinationId: Int) = binding.fab.run {
-        val iconId = when (destinationId) {
-            R.id.addNoteFragment -> R.drawable.ic_done
-            R.id.editNoteFragment -> R.drawable.ic_done
-            R.id.homeFragment -> R.drawable.ic_add
-            R.id.noteFragment -> R.drawable.ic_edit
-            else -> {
-                hide()
-                return@run
-            }
-        }
-        setImageIcon(Icon.createWithResource(this@MainActivity, iconId))
-        show()
+    private fun hideBottomBar() {
+        binding.fab.hide()
+        binding.bottomAppBar.performHide()
+        binding.bottomAppBar.visibility = View.INVISIBLE
+    }
+
+    private fun showBottomBar() {
+        binding.bottomAppBar.visibility = View.VISIBLE
+        binding.bottomAppBar.performShow()
+        binding.fab.show()
     }
 
     fun onFabClicked(listener: View.OnClickListener) = binding.fab.setOnClickListener(listener)
 
     private fun subscribeUi() {
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currentUser.collect {
-                    when {
-                        it.isSuccess && it.value != null -> navigateToHome()
-                        it.isFailure || it.value == null -> navigateToLogin()
-                        it.isIdle -> Handler(Looper.getMainLooper()).postDelayed({
-                            navigateToLogin()
-                            viewModel.refreshUser()
-                        }, resources.getInteger(R.integer.duration_animation_3).toLong())
+                launch {
+                    viewModel.currentUser.collect {
+                        when {
+                            it.isSuccess && it.value != null -> navigateToHome()
+                            it.isFailure -> navigateToLogin()
+                            it.isIdle -> Handler(Looper.getMainLooper()).postDelayed({
+                                navigateToLogin()
+                                viewModel.refreshUser()
+                            }, resources.getInteger(R.integer.duration_animation_3).toLong())
+                            else -> navigateToLogin()
+                        }
                     }
+                }
+
+                viewModel.uiState.collect { uiState ->
+                    if (uiState.noteDeleted.value == true) {
+                        navController.popBackStack()
+
+                        Snackbar.make(
+                            window.decorView.rootView,
+                            R.string.note_deleted,
+                            Snackbar.LENGTH_LONG
+                        ).apply {
+                            setAction(R.string.undo) { viewModel.undoDelete() }
+                            setAnchorView(R.id.fab)
+                        }.show()
+                    }
+
+                    uiState.message.value?.let { showToast(it) }
                 }
             }
         }

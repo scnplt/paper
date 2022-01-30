@@ -25,7 +25,7 @@
             app:fabCradleMargin="@dimen/gap_1"
             app:fabCradleRoundedCornerRadius="@dimen/gap_2"
             app:hideOnScroll="true"
-            app:menu="@menu/home_bottom_appbar"
+            app:menu="@menu/home"
             tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

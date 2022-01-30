@@ -54,6 +54,7 @@
             </LinearLayout>
 
             <TextView
+                gone="@{note.title.empty}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -66,6 +67,7 @@
                 tools:text="@tools:sample/lorem" />
 
             <TextView
+                gone="@{note.content.empty}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/gap_1"

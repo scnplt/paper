@@ -17,12 +17,11 @@ internal fun bindNotesToRecyclerView(view: RecyclerView, notesResponse: Response
     (view.adapter as? NoteAdapter)?.submitList(notesResponse.value)
 }
 
-@BindingAdapter("invisible")
-internal fun bindInvisibleToView(view: View, invisible: Boolean) {
-    view.visibility = if (invisible) View.INVISIBLE else View.VISIBLE
-}
-
-@BindingAdapter("gone")
-internal fun bindGoneToView(view: View, gone: Boolean) {
-    view.visibility = if (gone) View.GONE else View.VISIBLE
+@BindingAdapter("invisible", "gone", requireAll = false)
+internal fun bindInvisibleToView(view: View, invisible: Boolean?, gone: Boolean?) {
+    view.visibility = when {
+        invisible == true -> View.INVISIBLE
+        gone == true -> View.GONE
+        else -> View.VISIBLE
+    }
 }

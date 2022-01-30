@@ -16,5 +16,7 @@ internal class Single<T> {
             field = value
         }
 
-    constructor(value: T?) { this.value = value }
+    constructor(value: T?) {
+        this.value = value
+    }
 }

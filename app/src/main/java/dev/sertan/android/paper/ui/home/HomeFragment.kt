@@ -17,6 +17,7 @@ import dev.sertan.android.paper.R
 import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.databinding.FragmentHomeBinding
 import dev.sertan.android.paper.ui.main.MainActivity
+import dev.sertan.android.paper.ui.note.ScreenMode
 import dev.sertan.android.paper.util.showToast
 import kotlinx.coroutines.launch
 
@@ -44,7 +45,7 @@ internal class HomeFragment : Fragment(), NoteAdapter.NoteListener {
         subscribeUi()
 
         (requireActivity() as? MainActivity)?.onFabClicked {
-            val direction = HomeFragmentDirections.actionHomeToAddNote()
+            val direction = HomeFragmentDirections.actionHomeToNote(screenMode = ScreenMode.CREATE)
             findNavController().navigate(direction)
         }
     }
@@ -68,7 +69,7 @@ internal class HomeFragment : Fragment(), NoteAdapter.NoteListener {
     }
 
     override fun onNoteClicked(note: Note) {
-        val direction = HomeFragmentDirections.actionHomeToNote(note)
+        val direction = HomeFragmentDirections.actionHomeToNote(note = note)
         findNavController().navigate(direction)
     }
 
