@@ -33,5 +33,4 @@ internal class SplashFragment : Fragment(R.layout.fragment_splash) {
             WindowInsets.Type.navigationBars().let { if (isActive) hide(it) else show(it) }
         }
     }
-
 }

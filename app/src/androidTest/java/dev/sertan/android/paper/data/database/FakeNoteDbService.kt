@@ -39,5 +39,4 @@ internal class FakeNoteDbService : NoteDbService {
             emit(Response.success(mPapers))
         }.catch { e -> emit(Response.failure(e)) }
     }
-
 }

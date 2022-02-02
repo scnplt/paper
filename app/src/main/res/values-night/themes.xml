@@ -1,27 +1,17 @@
 <resources>
 
-    <style name="Theme.Paper" parent="Theme.Paper.Dark" />
-
-    <style name="Theme.Paper.Dark" parent="Theme.Paper.Light">
-
-        <!-- Color -->
-        <item name="colorPrimary">@color/grey_200</item>
-        <item name="colorPrimaryVariant">@color/grey_300</item>
-        <item name="colorOnPrimary">@color/black_900</item>
-        <item name="colorSecondary">@color/orange_300</item>
-        <item name="colorSecondaryVariant">@color/orange_300</item>
-        <item name="colorOnSecondary">@color/black_900</item>
-        <item name="colorSurface">@color/black_800</item>
-        <item name="colorOnSurface">@color/white_50</item>
-        <item name="colorError">@color/red_200</item>
-        <item name="colorOnError">@color/black_900</item>
-        <item name="android:colorBackground">@color/black_900</item>
-        <item name="colorOnBackground">@color/white_50</item>
-        <item name="scrimBackground">@color/black_900_alpha_85</item>
-        <item name="android:statusBarColor">@color/black_900_alpha_60</item>
-
-        <item name="elevationOverlayEnabled">true</item>
-        <item name="android:windowLightStatusBar">false</item>
-
+    <style name="Theme.Paper" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.Paper.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Paper.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.Paper.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Paper.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.Paper.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Paper.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.Paper.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Paper.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Paper.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.Paper.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.Paper.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.Paper.LabelMedium</item>
     </style>
 </resources>

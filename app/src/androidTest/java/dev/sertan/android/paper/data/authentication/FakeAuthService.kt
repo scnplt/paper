@@ -48,5 +48,4 @@ internal class FakeAuthService : AuthService {
     } catch (e: Exception) {
         Response.failure(e)
     }
-
 }

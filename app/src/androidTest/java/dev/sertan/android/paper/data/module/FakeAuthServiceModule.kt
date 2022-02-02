@@ -18,8 +18,6 @@ internal object FakeAuthServiceModule {
         /* To test FirebaseAuthService using Firebase Local Emulator Suite,
         create FirebaseAuth object by entering host and port values and
         return it with FirebaseAuthService. */
-
         return FakeAuthService()
     }
-
 }

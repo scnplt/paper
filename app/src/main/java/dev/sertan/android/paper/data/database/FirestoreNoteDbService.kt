@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.tasks.await
 
+private const val COLLECTION = "notes"
+
 internal class FirestoreNoteDbService(firestore: FirebaseFirestore) : NoteDbService {
     private val collection: CollectionReference by lazy { firestore.collection(COLLECTION) }
 
@@ -55,9 +57,4 @@ internal class FirestoreNoteDbService(firestore: FirebaseFirestore) : NoteDbServ
             }
         awaitClose { listenerRegistration.remove() }
     }.catch { e -> Response.failure(e) }
-
-    companion object {
-        private const val COLLECTION = "notes"
-    }
-
 }

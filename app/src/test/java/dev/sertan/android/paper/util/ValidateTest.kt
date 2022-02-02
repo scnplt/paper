@@ -32,5 +32,4 @@ internal class ValidateTest {
         val result = Validate.password(password)
         Truth.assertThat(result).isFalse()
     }
-
 }

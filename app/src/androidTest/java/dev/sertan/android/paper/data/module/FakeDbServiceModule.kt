@@ -18,8 +18,6 @@ internal object FakeDbServiceModule {
         /* To test FirestoreNoteDbService using Firebase Local Emulator Suite,
         create FirebaseFirestore object by entering host and port values and
         return it with FirestoreNoteDbService. */
-
         return FakeNoteDbService()
     }
-
 }

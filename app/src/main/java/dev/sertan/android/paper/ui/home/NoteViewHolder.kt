@@ -12,5 +12,4 @@ internal class NoteViewHolder(private val binding: ItemNoteBinding) :
         binding.listener = listener
         binding.executePendingBindings()
     }
-
 }

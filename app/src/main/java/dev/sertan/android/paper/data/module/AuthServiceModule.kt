@@ -17,5 +17,4 @@ internal object AuthServiceModule {
     @Provides
     @Singleton
     fun provideAuthService(): AuthService = FirebaseAuthService(Firebase.auth)
-
 }

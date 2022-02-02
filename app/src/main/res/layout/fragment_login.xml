@@ -5,12 +5,13 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="viewModel"
             type="dev.sertan.android.paper.ui.login.LoginViewModel" />
 
+        <variable
+            name="callback"
+            type="dev.sertan.android.paper.ui.login.LoginCallback" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textAppearance="?attr/textAppearanceHeadline2"
+            android:textAppearance="?textAppearanceDisplayLarge"
+            app:layout_constraintBottom_toTopOf="@id/textLayoutEmail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,21 +35,21 @@
             android:id="@+id/textLayoutEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gap_2"
+            android:layout_marginTop="@dimen/gap_3"
             android:hint="@string/email_address"
             app:endIconMode="clear_text"
             app:layout_constraintBottom_toTopOf="@id/textLayoutPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewAppName"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:text="@={viewModel.email}" />
-
+                android:text="@={viewModel.uiState.email}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -63,19 +65,18 @@
             app:layout_constraintTop_toBottomOf="@id/textLayoutEmail">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:text="@={viewModel.password}" />
-
+                android:text="@={viewModel.uiState.password}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
-            app:indicatorColor="?attr/colorOnSurface"
+            app:gone="@{!viewModel.uiState.isLoading}"
             app:layout_constraintBottom_toBottomOf="@id/buttonLogin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -84,13 +85,13 @@
 
         <Button
             android:id="@+id/buttonLogin"
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_2"
-            android:enabled="@{viewModel.isLoginButtonEnable}"
-            android:onClick="@{viewModel::login}"
+            android:onClick="@{() -> callback.onLoginClick()}"
             android:text="@string/log_in"
-            android:visibility="@{viewModel.isLoading ? View.INVISIBLE : View.VISIBLE}"
+            app:invisible="@{viewModel.uiState.isLoading}"
             app:layout_constraintBottom_toTopOf="@id/textViewRegister"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,11 +102,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_2"
-            android:layout_marginBottom="@dimen/gap_2"
-            android:onClick="@{viewModel::register}"
+            android:layout_marginBottom="@dimen/gap_3"
+            android:onClick="@{() -> callback.onRegisterClick()}"
             android:text="@string/register"
-            android:textAppearance="?attr/textAppearanceBody2"
-            app:layout_constraintBottom_toTopOf="@id/textViewForgotPassword"
+            android:textAppearance="?textAppearanceTitleMedium"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/buttonLogin" />
@@ -114,13 +115,11 @@
             android:id="@+id/textViewForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{viewModel::recoverPassword}"
+            android:onClick="@{() -> callback.onRecoverPasswordClick()}"
             android:text="@string/forgot_password"
-            android:textAppearance="?attr/textAppearanceBody2"
+            android:textAppearance="?textAppearanceTitleSmall"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

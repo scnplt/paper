@@ -1,8 +1,8 @@
 package dev.sertan.android.paper.data.model
 
 import android.os.Parcelable
-import java.util.UUID
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 @Parcelize
 data class Note(

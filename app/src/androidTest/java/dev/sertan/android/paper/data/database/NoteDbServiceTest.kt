@@ -5,7 +5,6 @@ import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dev.sertan.android.paper.data.model.Note
-import javax.inject.Inject
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
@@ -13,6 +12,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.inject.Inject
 
 @SmallTest
 @HiltAndroidTest
@@ -87,5 +87,4 @@ internal class NoteDbServiceTest {
         Truth.assertThat(response.value).isEmpty()
         Truth.assertThat(response.exception).isNull()
     }
-
 }
