@@ -52,7 +52,7 @@ internal class HomeFragment : Fragment(), NoteAdapter.NoteListener {
 
     private fun subscribeUi() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect { uiState ->
                     if (uiState.noteDeleted.value == true) {
                         Snackbar.make(requireView(), R.string.note_deleted, Snackbar.LENGTH_LONG)

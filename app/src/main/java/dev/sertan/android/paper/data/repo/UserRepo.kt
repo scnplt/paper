@@ -26,9 +26,6 @@ internal class UserRepo @Inject constructor(private val authService: AuthService
 
     suspend fun logOut(): Response<Unit> = authService.logOut().also { refreshCurrentUser() }
 
-    suspend fun deleteAccount(): Response<Unit> =
-        authService.deleteAccount().also { refreshCurrentUser() }
-
     suspend fun sendResetPasswordEmail(email: String): Response<Unit> =
         authService.sendResetPasswordEmail(email)
 }

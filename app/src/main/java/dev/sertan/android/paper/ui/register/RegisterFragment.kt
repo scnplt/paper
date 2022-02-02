@@ -42,7 +42,7 @@ internal class RegisterFragment : Fragment(), RegisterCallback {
 
     private fun subscribeUi() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 registerViewModel.uiState.collect { uiState ->
                     uiState.message.value?.let { requireContext().showToast(it) }
                     uiState.messageRes.value?.let {

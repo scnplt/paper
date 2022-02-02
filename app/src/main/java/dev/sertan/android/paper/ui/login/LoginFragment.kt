@@ -43,7 +43,7 @@ internal class LoginFragment : Fragment(), LoginCallback {
 
     private fun subscribeUi() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.uiState.collect { uiState ->
                     uiState.message.value?.let { requireContext().showToast(it) }
                     uiState.messageRes.value?.let {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -9,63 +10,63 @@
         <variable
             name="viewModel"
             type="dev.sertan.android.paper.ui.note.NoteViewModel" />
-
     </data>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/gap_1"
+        android:paddingTop="@dimen/gap_1">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/gap_2"
-            android:paddingBottom="@dimen/gap_9">
+            android:paddingBottom="@dimen/gap_10">
 
             <LinearLayout
-                gone="@{viewModel.editable}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/gap_2"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:gone="@{viewModel.editable}">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{@string/last_update_date(viewModel.updateDate)}"
+                    android:text="@{@string/last_update_date(Utils.timestampToSimpleDate(viewModel.note.updateDate))}"
                     android:textAlignment="textStart"
-                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textAppearance="?textAppearanceBodyMedium"
                     tools:text="Last update\n02/01/2021" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{@string/create_date(viewModel.createDate)}"
+                    android:text="@{@string/create_date(Utils.timestampToSimpleDate(viewModel.note.createDate))}"
                     android:textAlignment="textEnd"
-                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textAppearance="?textAppearanceBodyMedium"
                     tools:text="Create\n01/01/2021" />
-
             </LinearLayout>
 
             <EditText
                 android:id="@+id/editTextTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/gap_3"
                 android:background="@android:color/transparent"
-                android:enabled="@{viewModel.editable}"
-                android:hint="@string/title"
+                android:clickable="@{viewModel.editable}"
+                android:focusable="@{viewModel.editable}"
+                android:hint="@{viewModel.editable ? @string/title : ``}"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:maxLength="50"
                 android:text="@={viewModel.note.title}"
                 android:textAlignment="center"
-                android:textAppearance="?attr/textAppearanceHeadline4"
+                android:textAppearance="?textAppearanceTitleLarge"
                 tools:ignore="LabelFor"
                 tools:text="@tools:sample/lorem/random" />
 
@@ -75,21 +76,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/gap_2"
                 android:background="@android:color/transparent"
-                android:enabled="@{viewModel.editable}"
+                android:clickable="@{viewModel.editable}"
+                android:focusable="@{viewModel.editable}"
                 android:gravity="start"
-                android:hint="@string/content"
+                android:hint="@{viewModel.editable ? @string/content : ``}"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:maxLength="3000"
                 android:minHeight="@dimen/gap_40"
                 android:text="@={viewModel.note.content}"
-                android:textAlignment="gravity"
-                android:textAppearance="?attr/textAppearanceBody1"
+                android:textAppearance="?textAppearanceBodyLarge"
                 tools:ignore="LabelFor"
-                tools:text="@tools:sample/lorem/random" />
-
+                tools:text="@tools:sample/lorem" />
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
-
 </layout>

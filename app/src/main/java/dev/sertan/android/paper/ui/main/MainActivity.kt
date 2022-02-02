@@ -1,5 +1,7 @@
 package dev.sertan.android.paper.ui.main
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -29,22 +31,24 @@ import dev.sertan.android.paper.util.showToast
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-internal class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener,
+internal class MainActivity : AppCompatActivity(),
+    NavController.OnDestinationChangedListener,
     Toolbar.OnMenuItemClickListener {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
     private val viewModel by viewModels<MainViewModel>()
-
-    private val navController by lazy {
-        (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment)
-            .navController.apply { addOnDestinationChangedListener(this@MainActivity) }
-    }
-
     private var currentNote: Note? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        navController = navHostFragment.navController
+            .apply { addOnDestinationChangedListener(this@MainActivity) }
+
         binding.bottomAppBar.setOnMenuItemClickListener(this)
         subscribeUi()
     }
@@ -52,9 +56,9 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.delete -> currentNote?.let { viewModel.deleteNote(it) }
-            R.id.archive -> showToast("archive clicked - note: ${currentNote?.title}")
-            R.id.favorite -> showToast("favorite clicked - note: ${currentNote?.title}")
-            R.id.search -> showToast("search clicked - note: ${currentNote?.title}")
+            R.id.archive -> showToast("archive clicked")
+            R.id.favorite -> showToast("favorite clicked")
+            R.id.search -> showToast("search clicked")
             R.id.logOut -> viewModel.logOut()
             else -> return false
         }
@@ -65,47 +69,61 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
         controller: NavController,
         destination: NavDestination,
         arguments: Bundle?,
-    ) = binding.run {
+    ) {
         when (destination.id) {
             R.id.homeFragment -> {
                 currentNote = null
-                fab.setImageResource(R.drawable.ic_add)
-                bottomAppBar
-                    .setFabAlignmentModeAndReplaceMenu(FAB_ALIGNMENT_MODE_CENTER, R.menu.home)
-                showBottomBar()
-                fab.show()
+                setBottomAppBarForHome()
             }
             R.id.noteFragment -> {
                 val args = NoteFragmentArgs.fromBundle(arguments!!)
                 currentNote = args.note
-                if (args.screenMode == ScreenMode.GET) {
-                    fab.setImageResource(R.drawable.ic_edit)
-                    bottomAppBar
-                        .setFabAlignmentModeAndReplaceMenu(FAB_ALIGNMENT_MODE_END, R.menu.note)
-                    showBottomBar()
-                } else {
-                    bottomAppBar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
-                    fab.setImageResource(R.drawable.ic_done)
-                    hideBottomBar()
-                }
-                fab.show()
+                setBottomAppBarForNote(args.screenMode)
             }
             else -> {
                 currentNote = null
-                fab.hide()
-                hideBottomBar()
+                binding.fab.hide()
+                hideBottomAppBar()
             }
         }
     }
 
-    private fun hideBottomBar() {
-        binding.bottomAppBar.performHide()
-        binding.bottomAppBar.visibility = View.INVISIBLE
+    private fun setBottomAppBarForHome() {
+        binding.run {
+            bottomAppBar.setFabAlignmentModeAndReplaceMenu(FAB_ALIGNMENT_MODE_CENTER, R.menu.home)
+            fab.setImageResource(R.drawable.ic_add)
+            showBottomAppBar()
+            fab.show()
+        }
     }
 
-    private fun showBottomBar() {
-        binding.bottomAppBar.visibility = View.VISIBLE
-        binding.bottomAppBar.performShow()
+    private fun setBottomAppBarForNote(screenMode: ScreenMode) {
+        binding.run {
+            bottomAppBar.setFabAlignmentModeAndReplaceMenu(FAB_ALIGNMENT_MODE_END, R.menu.note)
+            if (screenMode == ScreenMode.GET) {
+                fab.setImageResource(R.drawable.ic_edit)
+                showBottomAppBar()
+            } else {
+                fab.setImageResource(R.drawable.ic_done)
+                hideBottomAppBar()
+            }
+            fab.show()
+        }
+    }
+
+    private fun showBottomAppBar() {
+        binding.bottomAppBar.apply { visibility = View.VISIBLE }.performShow()
+    }
+
+    private fun hideBottomAppBar() {
+        binding.bottomAppBar.apply {
+            performHide()
+            animate().setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    visibility = View.INVISIBLE
+                }
+            })
+        }
     }
 
     fun onFabClicked(listener: View.OnClickListener) = binding.fab.setOnClickListener(listener)
@@ -117,7 +135,6 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
                     viewModel.currentUser.collect {
                         when {
                             it.isSuccess && it.value != null -> navigateToHome()
-                            it.isFailure -> navigateToLogin()
                             it.isIdle -> Handler(Looper.getMainLooper()).postDelayed({
                                 navigateToLogin()
                                 viewModel.refreshUser()
@@ -130,7 +147,6 @@ internal class MainActivity : AppCompatActivity(), NavController.OnDestinationCh
                 viewModel.uiState.collect { uiState ->
                     if (uiState.noteDeleted.value == true) {
                         navController.popBackStack()
-
                         Snackbar.make(
                             window.decorView.rootView,
                             R.string.note_deleted,
