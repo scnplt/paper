@@ -12,7 +12,6 @@
         <variable
             name="callback"
             type="dev.sertan.android.paper.ui.register.RegisterCallback" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textAppearance="?attr/textAppearanceHeadline2"
+            android:textAppearance="?textAppearanceDisplayLarge"
+            app:layout_constraintBottom_toTopOf="@id/textLayoutEmail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,12 +35,11 @@
             android:id="@+id/textLayoutEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gap_2"
             app:endIconMode="clear_text"
             app:layout_constraintBottom_toTopOf="@id/textLayoutPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewAppName"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -50,7 +49,6 @@
                 android:hint="@string/email_address"
                 android:inputType="textEmailAddress"
                 android:text="@={viewModel.uiState.email}" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -71,7 +69,6 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:text="@={viewModel.uiState.password}" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -92,15 +89,13 @@
                 android:hint="@string/re_enter_password"
                 android:inputType="textPassword"
                 android:text="@={viewModel.uiState.passwordConfirm}" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
-            gone="@{!viewModel.uiState.isLoading}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:indicatorColor="?attr/colorOnSurface"
+            app:gone="@{!viewModel.uiState.isLoading}"
             app:layout_constraintBottom_toBottomOf="@id/buttonRegister"
             app:layout_constraintEnd_toEndOf="@id/buttonRegister"
             app:layout_constraintStart_toStartOf="@id/buttonRegister"
@@ -109,18 +104,17 @@
 
         <Button
             android:id="@+id/buttonRegister"
-            invisible="@{viewModel.uiState.isLoading}"
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_2"
             android:onClick="@{() -> callback.onRegisterClick()}"
             android:text="@string/register"
+            app:invisible="@{viewModel.uiState.isLoading}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textLayoutPasswordConfirmation"
             tools:visibility="visible" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

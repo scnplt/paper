@@ -8,7 +8,6 @@
         <variable
             name="viewModel"
             type="dev.sertan.android.paper.ui.home.HomeViewModel" />
-
     </data>
 
     <FrameLayout
@@ -17,24 +16,23 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewNotes"
-            invisible="@{viewModel.uiState.isEmpty}"
-            notes="@{viewModel.uiState.notes}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="@dimen/gap_9"
+            android:paddingBottom="@dimen/gap_10"
+            app:invisible="@{viewModel.uiState.empty}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:notes="@{viewModel.uiState.notes}"
             tools:listitem="@layout/item_note" />
 
         <TextView
-            gone="@{!viewModel.uiState.isEmpty}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/you_did_not_take_any_notes"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            tools:visibility="gone" />
-
+            android:textAlignment="center"
+            android:textAppearance="?textAppearanceTitleMedium"
+            app:gone="@{!viewModel.uiState.empty}"
+            tools:visibility="visible" />
     </FrameLayout>
-
 </layout>

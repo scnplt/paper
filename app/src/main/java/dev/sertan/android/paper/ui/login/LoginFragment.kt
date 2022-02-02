@@ -43,7 +43,7 @@ internal class LoginFragment : Fragment(), LoginCallback {
 
     private fun subscribeUi() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.uiState.collect { uiState ->
                     uiState.message.value?.let { requireContext().showToast(it) }
                     uiState.messageRes.value?.let {
@@ -74,20 +74,16 @@ internal class LoginFragment : Fragment(), LoginCallback {
     }
 
     private fun checkEmailAddress(): Boolean {
-        return binding.editTextEmail.text.toString().let(Validate::email).also { isValid ->
-            if (!isValid) {
-                binding.editTextEmail.error = resources.getString(R.string.invalid_email)
-                binding.editTextEmail.requestFocus()
-            }
+        return Validate.email("${binding.editTextEmail.text}").also { isValid ->
+            binding.textLayoutEmail.error =
+                resources.getString(R.string.invalid_email).takeUnless { isValid }
         }
     }
 
     private fun checkPassword(): Boolean {
-        return binding.editTextPassword.text.toString().let(Validate::password).also { isValid ->
-            if (!isValid) {
-                binding.editTextPassword.error = resources.getString(R.string.invalid_pwd)
-                binding.editTextPassword.requestFocus()
-            }
+        return Validate.password("${binding.editTextPassword.text}").also { isValid ->
+            binding.textLayoutPassword.error =
+                resources.getString(R.string.invalid_pwd).takeUnless { isValid }
         }
     }
 }

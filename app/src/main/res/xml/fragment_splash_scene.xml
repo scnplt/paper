@@ -43,13 +43,9 @@
                 android:alpha="1.0"
                 motion:framePosition="100"
                 motion:motionTarget="@+id/textViewAppName" />
-
         </KeyFrameSet>
-
     </Transition>
 
     <ConstraintSet android:id="@+id/start" />
-
     <ConstraintSet android:id="@+id/end" />
-
 </MotionScene>

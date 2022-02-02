@@ -22,8 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:visibility="invisible"
-            app:fabCradleMargin="@dimen/gap_1"
-            app:fabCradleRoundedCornerRadius="@dimen/gap_2"
+            app:fabAlignmentMode="center"
             app:hideOnScroll="true"
             app:menu="@menu/home"
             tools:visibility="visible" />
@@ -36,7 +35,5 @@
             android:visibility="invisible"
             app:layout_anchor="@id/bottomAppBar"
             tools:visibility="visible" />
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 </layout>

@@ -68,11 +68,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.0'
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
 
     // Test
     testImplementation 'junit:junit:4.13.2'

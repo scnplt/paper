@@ -5,7 +5,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sertan.android.paper.data.model.Note
 import dev.sertan.android.paper.data.repo.NoteRepo
 import dev.sertan.android.paper.data.repo.UserRepo
-import dev.sertan.android.paper.util.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,13 +16,10 @@ internal class NoteViewModel @Inject constructor(
     private val userRepo: UserRepo,
     private val noteRepo: NoteRepo
 ) : ViewModel() {
+
     private val scope by lazy { CoroutineScope(Dispatchers.IO) }
     private val userUid by lazy { userRepo.currentUser.value.value?.uid }
-
     val note = MutableStateFlow(Note())
-    val createDate: String get() = Utils.timestampToSimpleDate(note.value.createDate)
-    val updateDate: String get() = Utils.timestampToSimpleDate(note.value.updateDate)
-
     var screenMode: ScreenMode = ScreenMode.GET
     val isEditable get() = screenMode != ScreenMode.GET
 
