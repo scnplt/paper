@@ -1,4 +1,5 @@
 buildscript {
+    apply from: rootProject.file('versions.gradle')
 
     repositories {
         google()
@@ -6,24 +7,32 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
-
-        // Hilt
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.40.1"
-
-        // Firebase
-        classpath "com.google.gms:google-services:4.3.10"
-
-        // Navigation
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0"
+        classpath plugs.androidGradle
+        classpath plugs.kotlinGradlePlugin
+        classpath plugs.hiltGradlePlugin
+        classpath plugs.googleServices
+        classpath plugs.navigationSafeArgs
+        classpath plugs.detekt
     }
 }
 
 allprojects {
-    repositories {
-        mavenCentral()
-        google()
+    apply plugin: 'io.gitlab.arturbosch.detekt'
+
+    detekt {
+        allRules = false
+        debug = true
+        parallel = true
+    }
+
+    tasks.named("detekt").configure {
+        reports {
+            html.required.set(true)
+            md.required.set(false)
+            sarif.required.set(false)
+            txt.required.set(true)
+            xml.required.set(false)
+        }
     }
 }
 

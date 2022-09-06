@@ -1,0 +1,58 @@
+package dev.sertan.android.paper.screen.login
+
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import dagger.hilt.android.AndroidEntryPoint
+import dev.sertan.android.paper.R
+import dev.sertan.android.paper.databinding.FragmentLoginBinding
+import dev.sertan.android.paper.util.extension.navigateTo
+import dev.sertan.android.paper.util.extension.provideBinding
+import dev.sertan.android.paper.util.extension.setLoadingDialogVisibility
+import dev.sertan.android.paper.util.extension.showMessage
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.launch
+
+@AndroidEntryPoint
+internal class LoginFragment : Fragment(R.layout.fragment_login) {
+    private val binding by provideBinding(FragmentLoginBinding::bind)
+    private val loginViewModel by viewModels<LoginViewModel>()
+
+    private val loginUiStateFlowCollector = FlowCollector<LoginUiState> { uiState ->
+        setLoadingDialogVisibility(isVisible = uiState.isLoading)
+        showMessage(message = uiState.exceptionMessage.data)
+        if (uiState.isLoggedIn) navigateTo(LoginFragmentDirections.actionGlobalHomeFragment())
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViewListeners()
+        subscribeUi()
+    }
+
+    private fun subscribeUi() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loginViewModel.loginUiState.collect(loginUiStateFlowCollector)
+            }
+        }
+    }
+
+    private fun initViewListeners() {
+        with(binding) {
+            emailInputLayout.setOnTextChanged(loginViewModel::updateEmailAddress)
+            passwordInputLayout.setOnTextChanged(loginViewModel::updatePassword)
+            logInButton.setOnClickListener { loginViewModel.logIn() }
+            registerButton.setOnClickListener {
+                // TODO navigate to the register fragment
+            }
+            sendPasswordResetEmailTextView.setOnClickListener {
+                loginViewModel.sendPasswordResetEmail()
+            }
+        }
+    }
+}

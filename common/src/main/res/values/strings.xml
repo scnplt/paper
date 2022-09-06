@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="entered_invalid_email_address">You entered an invalid email address!</string>
+    <string name="invalid_email_or_password">Invalid email or password!</string>
+    <string name="unexpected_situation_was_encountered">An unexpected situation was encountered!</string>
+</resources>

@@ -1,75 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="TextAppearance.Paper.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
-        <item name="fontFamily">@font/mali</item>
-        <item name="android:fontFamily">@font/mali</item>
-        <item name="android:textSize">100sp</item>
+    <!-- Theme -->
+    <style name="Theme.Paper" parent="Theme.Paper.Base">
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Paper.BottomSheetDialog</item>
+        <item name="fontFamily">@font/ubuntu_mono</item>
+        <item name="materialButtonStyle">@style/Widget.Material3.Button.OutlinedButton</item>
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="TextAppearance.Paper.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
-        <item name="fontFamily">@font/mali</item>
-        <item name="android:fontFamily">@font/mali</item>
-        <item name="android:textSize">62sp</item>
+    <style name="Theme.Paper.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_screen</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.Paper</item>
     </style>
 
-    <style name="TextAppearance.Paper.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
-        <item name="fontFamily">@font/mali</item>
-        <item name="android:fontFamily">@font/mali</item>
-        <item name="android:textSize">50sp</item>
+    <!-- ThemeOverlay -->
+    <style name="ThemeOverlay.Paper.BottomSheetDialog" parent="ThemeOverlay.Paper.BottomSheetDialog.Base">
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-    <style name="TextAppearance.Paper.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
-        <item name="fontFamily">@font/mali</item>
-        <item name="android:fontFamily">@font/mali</item>
-        <item name="android:textSize">35sp</item>
-    </style>
-
-    <style name="TextAppearance.Paper.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
-        <item name="fontFamily">@font/mali</item>
-        <item name="android:fontFamily">@font/mali</item>
-        <item name="android:textSize">25sp</item>
-    </style>
-
-    <style name="TextAppearance.Paper.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
-        <item name="fontFamily">@font/mali</item>
-        <item name="android:fontFamily">@font/mali</item>
-        <item name="android:textSize">17sp</item>
-    </style>
-
-    <style name="TextAppearance.Paper.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
-        <item name="fontFamily">@font/mali</item>
-        <item name="android:fontFamily">@font/mali</item>
-        <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="TextAppearance.Paper.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="TextAppearance.Paper.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="TextAppearance.Paper.BodySmall" parent="TextAppearance.Material3.BodySmall">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="TextAppearance.Paper.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="TextAppearance.Paper.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">10sp</item>
-    </style>
 </resources>

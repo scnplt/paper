@@ -1,125 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="viewModel"
-            type="dev.sertan.android.paper.ui.login.LoginViewModel" />
-
-        <variable
-            name="callback"
-            type="dev.sertan.android.paper.ui.login.LoginCallback" />
-    </data>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="@dimen/gap_2"
-        android:paddingBottom="@dimen/gap_2">
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/textViewAppName"
+            android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/gap_xxlarge"
             android:text="@string/app_name"
-            android:textAppearance="?textAppearanceDisplayLarge"
-            app:layout_constraintBottom_toTopOf="@id/textLayoutEmail"
+            android:textAppearance="?attr/textAppearanceDisplayLarge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textLayoutEmail"
-            android:layout_width="match_parent"
+        <dev.sertan.android.paper.customview.PaperInputLayout
+            android:id="@+id/emailInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gap_3"
-            android:hint="@string/email_address"
+            android:layout_marginHorizontal="@dimen/gap_xxlarge"
+            android:layout_marginTop="@dimen/gap_xxlarge"
+            android:inputType="textEmailAddress"
             app:endIconMode="clear_text"
-            app:layout_constraintBottom_toTopOf="@id/textLayoutPassword"
+            app:hint="@string/email_address"
+            app:layout_constraintBottom_toTopOf="@id/passwordInputLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed">
+            app:layout_constraintTop_toBottomOf="@id/titleTextView"
+            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:text="@={viewModel.uiState.email}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textLayoutPassword"
-            android:layout_width="match_parent"
+        <dev.sertan.android.paper.customview.PaperInputLayout
+            android:id="@+id/passwordInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gap_2"
-            android:hint="@string/password"
+            android:layout_marginTop="@dimen/gap_large"
+            android:inputType="textPassword"
             app:endIconMode="password_toggle"
-            app:layout_constraintBottom_toTopOf="@id/buttonLogin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textLayoutEmail">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:text="@={viewModel.uiState.password}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            app:gone="@{!viewModel.uiState.isLoading}"
-            app:layout_constraintBottom_toBottomOf="@id/buttonLogin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/buttonLogin"
-            tools:visibility="gone" />
+            app:hint="@string/password"
+            app:layout_constraintBottom_toTopOf="@id/logInButton"
+            app:layout_constraintEnd_toEndOf="@id/emailInputLayout"
+            app:layout_constraintStart_toStartOf="@id/emailInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/emailInputLayout" />
 
         <Button
-            android:id="@+id/buttonLogin"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
+            android:id="@+id/logInButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gap_2"
-            android:onClick="@{() -> callback.onLoginClick()}"
+            android:layout_marginTop="@dimen/gap_xxlarge"
             android:text="@string/log_in"
-            app:invisible="@{viewModel.uiState.isLoading}"
-            app:layout_constraintBottom_toTopOf="@id/textViewRegister"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textLayoutPassword" />
+            app:layout_constraintBottom_toTopOf="@id/registerButton"
+            app:layout_constraintEnd_toEndOf="@id/passwordInputLayout"
+            app:layout_constraintStart_toStartOf="@id/passwordInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/passwordInputLayout" />
 
-        <TextView
-            android:id="@+id/textViewRegister"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gap_2"
-            android:layout_marginBottom="@dimen/gap_3"
-            android:onClick="@{() -> callback.onRegisterClick()}"
+            android:layout_marginTop="@dimen/gap_large"
+            android:layout_marginBottom="@dimen/gap_xxlarge"
             android:text="@string/register"
-            android:textAppearance="?textAppearanceTitleMedium"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonLogin" />
+            app:layout_constraintBottom_toTopOf="@id/sendPasswordResetEmailTextView"
+            app:layout_constraintEnd_toEndOf="@id/logInButton"
+            app:layout_constraintStart_toStartOf="@id/logInButton"
+            app:layout_constraintTop_toBottomOf="@id/logInButton" />
 
         <TextView
-            android:id="@+id/textViewForgotPassword"
-            android:layout_width="wrap_content"
+            android:id="@+id/sendPasswordResetEmailTextView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> callback.onRecoverPasswordClick()}"
-            android:text="@string/forgot_password"
-            android:textAppearance="?textAppearanceTitleSmall"
+            android:layout_margin="@dimen/gap_large"
+            android:gravity="center_horizontal"
+            android:text="@string/forgot_password_send_reset_email"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+
+</ScrollView>

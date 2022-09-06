@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PaperInputLayout">
+        <attr name="android:inputType" />
+        <attr name="android:maxLength" />
+        <attr name="endIconMode" />
+        <attr name="error" format="string" />
+        <attr name="errorEnabled" format="boolean" />
+        <attr name="hint" format="string" />
+        <attr name="inputText" format="string" />
+        <attr name="maxLines" format="integer" />
+        <attr name="prefixText" format="string" />
+        <attr name="suffixText" format="string" />
+    </declare-styleable>
+
+</resources>

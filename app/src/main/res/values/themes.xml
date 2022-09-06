@@ -1,17 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Paper" parent="Theme.Material3.Light.NoActionBar">
-        <item name="textAppearanceDisplaySmall">@style/TextAppearance.Paper.DisplaySmall</item>
-        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Paper.HeadlineLarge</item>
-        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.Paper.HeadlineMedium</item>
-        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Paper.HeadlineSmall</item>
-        <item name="textAppearanceTitleLarge">@style/TextAppearance.Paper.TitleLarge</item>
-        <item name="textAppearanceTitleMedium">@style/TextAppearance.Paper.TitleMedium</item>
-        <item name="textAppearanceTitleSmall">@style/TextAppearance.Paper.TitleSmall</item>
-        <item name="textAppearanceBodyLarge">@style/TextAppearance.Paper.BodyLarge</item>
-        <item name="textAppearanceBodyMedium">@style/TextAppearance.Paper.BodyMedium</item>
-        <item name="textAppearanceBodySmall">@style/TextAppearance.Paper.BodySmall</item>
-        <item name="textAppearanceLabelLarge">@style/TextAppearance.Paper.LabelLarge</item>
-        <item name="textAppearanceLabelMedium">@style/TextAppearance.Paper.LabelMedium</item>
-    </style>
+    <style name="Theme.Paper.Base" parent="Theme.Material3.DynamicColors.Light" />
+
+    <style name="ThemeOverlay.Paper.BottomSheetDialog.Base" parent="ThemeOverlay.Material3.BottomSheetDialog" />
 </resources>

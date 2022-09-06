@@ -1,28 +1,8 @@
 <resources>
     <string name="app_name">Paper</string>
-    <string name="archive">Archive</string>
-    <string name="content">Content</string>
-    <string name="create_date">Create\n%1$s</string>
-    <string name="delete">Delete</string>
     <string name="email_address">Email address</string>
-    <string name="favorite">Favorite</string>
-    <string name="forgot_password">Forgot password?</string>
-    <string name="invalid_email">Invalid email address!</string>
-    <string name="invalid_pwd">Password must be at least 8 characters!</string>
-    <string name="invalid_pwd_confirm">Passwords must be the same!</string>
-    <string name="last_update_date">Last update\n%1$s</string>
-    <string name="location_splash_animation">lottie/splash.json</string>
-    <string name="log_in">Log in</string>
-    <string name="log_out">Log out</string>
-    <string name="main_action_button">Main action button.</string>
-    <string name="note_deleted">Note deleted.</string>
     <string name="password">Password</string>
+    <string name="log_in">Log in</string>
     <string name="register">Register</string>
-    <string name="registration_successful">Registration successful!</string>
-    <string name="re_enter_password">Re-enter your password.</string>
-    <string name="search">Search</string>
-    <string name="send_password_recovery_email">Password recovery email has been sent.</string>
-    <string name="title">Title</string>
-    <string name="undo">Undo</string>
-    <string name="you_did_not_take_any_notes">You did not take any notes.</string>
+    <string name="forgot_password_send_reset_email">Forgot your password?\nSend password reset email.</string>
 </resources>

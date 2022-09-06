@@ -1,38 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="dev.sertan.android.paper.ui.home.HomeViewModel" />
-    </data>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewNotes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/gap_10"
-            app:invisible="@{viewModel.uiState.empty}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:notes="@{viewModel.uiState.notes}"
-            tools:listitem="@layout/item_note" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/you_did_not_take_any_notes"
-            android:textAlignment="center"
-            android:textAppearance="?textAppearanceTitleMedium"
-            app:gone="@{!viewModel.uiState.empty}"
-            tools:visibility="visible" />
-    </FrameLayout>
-</layout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Home Screen"
+        android:textAppearance="?attr/textAppearanceDisplayLarge" />
+</FrameLayout>

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="image_size_3">300dp</dimen>
-
-    <dimen name="gap_1">8dp</dimen>
-    <dimen name="gap_2">16dp</dimen>
-    <dimen name="gap_3">24dp</dimen>
-    <dimen name="gap_10">80dp</dimen>
-    <dimen name="gap_40">320dp</dimen>
+    <dimen name="gap_normal">8dp</dimen>
+    <dimen name="gap_large">16dp</dimen>
+    <dimen name="gap_xlarge">20dp</dimen>
+    <dimen name="gap_xxlarge">24dp</dimen>
 </resources>
