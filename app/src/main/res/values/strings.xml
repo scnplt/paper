@@ -5,4 +5,5 @@
     <string name="log_in">Log in</string>
     <string name="register">Register</string>
     <string name="forgot_password_send_reset_email">Forgot your password?\nSend password reset email.</string>
+    <string name="password_reset_email_send_success">Password reset email sent successfully.\nPlease don\'t forget to check your inbox.</string>
 </resources>

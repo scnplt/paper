@@ -7,7 +7,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sertan.android.paper.common.util.OneTimeState
 import dev.sertan.android.paper.common.util.validateEmailAddress
 import dev.sertan.android.paper.common.util.validatePassword
+import dev.sertan.android.paper.domain.usecase.GetCurrentUserUidUseCase
 import dev.sertan.android.paper.domain.usecase.LogInUseCase
+import dev.sertan.android.paper.domain.usecase.SendPasswordResetEmailUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,45 +18,83 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class LoginViewModel @Inject constructor(
-    private val logInUseCase: LogInUseCase
+    private val logInUseCase: LogInUseCase,
+    private val sendPasswordResetEmailUseCase: SendPasswordResetEmailUseCase,
+    private val getCurrentUserUidUseCase: GetCurrentUserUidUseCase,
 ) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow(LoginUiState())
     val loginUiState get() = _loginUiState.asStateFlow()
 
-    // TODO create custom classes for exceptions
-    fun logIn() {
-        if (!isAllFormValid() || loginUiState.value.isLoading) return
-        _loginUiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            val result = with(loginUiState.value) {
-                logInUseCase(email = emailAddress, password = password)
-            }
+    init {
+        updateUiStateByLoginStatus()
+    }
+
+    private fun updateUiStateByLoginStatus() {
+        runWithLoadingState {
+            val currentUserUidResult = getCurrentUserUidUseCase()
             _loginUiState.update {
-                it.copy(
-                    isLoading = false,
-                    isLoggedIn = result.data ?: false,
-                    exceptionMessage = OneTimeState(data = result.exception?.message)
-                )
+                it.copy(isLoggedIn = !currentUserUidResult.data.isNullOrBlank())
             }
         }
     }
 
     fun updateEmailAddress(address: Editable?) {
-        _loginUiState.update { it.copy(emailAddress = address.toString()) }
+        val emailAddress = address.toString().trim()
+        _loginUiState.update {
+            it.copy(
+                emailAddress = emailAddress,
+                isEmailValid = validateEmailAddress(emailAddress)
+            )
+        }
     }
 
     fun updatePassword(pwd: Editable?) {
-        _loginUiState.update { it.copy(password = pwd.toString()) }
+        val password = pwd.toString().trim()
+        _loginUiState.update {
+            it.copy(
+                password = password,
+                isPasswordValid = validatePassword(password)
+            )
+        }
     }
 
-    private fun isAllFormValid(): Boolean {
-        return with(loginUiState.value) {
-            validateEmailAddress(address = emailAddress) && validatePassword(pwd = password)
+    fun logIn() {
+        with(loginUiState.value) {
+            if (isEmailValid != true || isPasswordValid != true) return
+            runWithLoadingState {
+                val logInResult = logInUseCase(email = emailAddress, password = password)
+                _loginUiState.update {
+                    it.copy(
+                        isLoggedIn = logInResult.data == true,
+                        exceptionMessageRes = OneTimeState(data = logInResult.exception?.messageRes)
+                    )
+                }
+            }
         }
     }
 
     fun sendPasswordResetEmail() {
-        // TODO send password reset email
+        with(loginUiState.value) {
+            if (isEmailValid != true) return
+            runWithLoadingState {
+                val result = sendPasswordResetEmailUseCase(email = emailAddress)
+                _loginUiState.update {
+                    it.copy(
+                        isPasswordResetEmailSendSuccess = OneTimeState(data = result.data),
+                        exceptionMessageRes = OneTimeState(data = result.exception?.messageRes)
+                    )
+                }
+            }
+        }
+    }
+
+    private inline fun runWithLoadingState(crossinline block: suspend () -> Unit) {
+        if (loginUiState.value.isLoading) return
+        _loginUiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            block()
+            _loginUiState.update { it.copy(isLoading = false) }
+        }
     }
 }

@@ -22,10 +22,14 @@ internal class LoginFragment : Fragment(R.layout.fragment_login) {
     private val binding by provideBinding(FragmentLoginBinding::bind)
     private val loginViewModel by viewModels<LoginViewModel>()
 
-    private val loginUiStateFlowCollector = FlowCollector<LoginUiState> { uiState ->
-        setLoadingDialogVisibility(isVisible = uiState.isLoading)
-        showMessage(message = uiState.exceptionMessage.data)
-        if (uiState.isLoggedIn) navigateTo(LoginFragmentDirections.actionGlobalHomeFragment())
+    private val uiStateFlowCollector = FlowCollector<LoginUiState> {
+        setLoadingDialogVisibility(isVisible = it.isLoading)
+        showMessage(messageRes = it.exceptionMessageRes.data)
+        if (it.isLoggedIn) navigateTo(LoginFragmentDirections.actionGlobalHomeFragment())
+        with(binding) {
+            it.isEmailValid?.let { isValid -> emailInputLayout.errorEnabled = !isValid }
+            it.isPasswordValid?.let { isValid -> passwordInputLayout.errorEnabled = !isValid }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,24 +38,24 @@ internal class LoginFragment : Fragment(R.layout.fragment_login) {
         subscribeUi()
     }
 
-    private fun subscribeUi() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                loginViewModel.loginUiState.collect(loginUiStateFlowCollector)
+    private fun initViewListeners() {
+        with(binding) {
+            emailInputLayout.doAfterTextChanged(loginViewModel::updateEmailAddress)
+            passwordInputLayout.doAfterTextChanged(loginViewModel::updatePassword)
+            logInButton.setOnClickListener { loginViewModel.logIn() }
+            registerButton.setOnClickListener {
+                navigateTo(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
+            }
+            sendPasswordResetEmailTextView.setOnClickListener {
+                loginViewModel.sendPasswordResetEmail()
             }
         }
     }
 
-    private fun initViewListeners() {
-        with(binding) {
-            emailInputLayout.setOnTextChanged(loginViewModel::updateEmailAddress)
-            passwordInputLayout.setOnTextChanged(loginViewModel::updatePassword)
-            logInButton.setOnClickListener { loginViewModel.logIn() }
-            registerButton.setOnClickListener {
-                // TODO navigate to the register fragment
-            }
-            sendPasswordResetEmailTextView.setOnClickListener {
-                loginViewModel.sendPasswordResetEmail()
+    private fun subscribeUi() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loginViewModel.loginUiState.collect(uiStateFlowCollector)
             }
         }
     }

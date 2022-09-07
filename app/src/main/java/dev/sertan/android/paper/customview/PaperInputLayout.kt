@@ -18,7 +18,7 @@ internal class PaperInputLayout @JvmOverloads constructor(
     @StyleRes defStyleRes: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding = LayoutPaperInputBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutPaperInputBinding.inflate(LayoutInflater.from(context), this)
 
     var endIconMode: Int
         get() = binding.inputLayout.endIconMode
@@ -26,16 +26,15 @@ internal class PaperInputLayout @JvmOverloads constructor(
             binding.inputLayout.endIconMode = value
         }
 
-    var error: CharSequence?
-        get() = binding.inputLayout.error
-        set(value) {
-            binding.inputLayout.error = value
-        }
+    var error: CharSequence? = null
 
     var errorEnabled: Boolean
         get() = binding.inputLayout.isErrorEnabled
         set(value) {
-            binding.inputLayout.isErrorEnabled = value
+            with(binding.inputLayout) {
+                isErrorEnabled = value
+                error = this@PaperInputLayout.error.takeIf { value }
+            }
         }
 
     var hint: CharSequence?
@@ -83,19 +82,18 @@ internal class PaperInputLayout @JvmOverloads constructor(
     init {
         context.obtainStyledAttributes(attrs, R.styleable.PaperInputLayout).use {
             endIconMode = it.getInt(R.styleable.PaperInputLayout_endIconMode, endIconMode)
-            error = it.getText(R.styleable.PaperInputLayout_error)
-            errorEnabled = it.getBoolean(R.styleable.PaperInputLayout_errorEnabled, errorEnabled)
-            hint = it.getText(R.styleable.PaperInputLayout_hint)
-            inputText = it.getText(R.styleable.PaperInputLayout_inputText)
+            error = it.getString(R.styleable.PaperInputLayout_error)
+            hint = it.getString(R.styleable.PaperInputLayout_hint)
+            inputText = it.getString(R.styleable.PaperInputLayout_inputText)
             inputType = it.getInt(R.styleable.PaperInputLayout_android_inputType, inputType)
             maxLength = it.getInt(R.styleable.PaperInputLayout_android_maxLength, maxLength)
             maxLines = it.getInt(R.styleable.PaperInputLayout_maxLines, maxLines)
-            prefixText = it.getText(R.styleable.PaperInputLayout_prefixText)
-            suffixText = it.getText(R.styleable.PaperInputLayout_suffixText)
+            prefixText = it.getString(R.styleable.PaperInputLayout_prefixText)
+            suffixText = it.getString(R.styleable.PaperInputLayout_suffixText)
         }
     }
 
-    fun setOnTextChanged(listener: (Editable?) -> Unit) {
+    fun doAfterTextChanged(listener: (Editable?) -> Unit) {
         binding.editText.doAfterTextChanged(listener)
     }
 }

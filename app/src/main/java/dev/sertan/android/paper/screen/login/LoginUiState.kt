@@ -7,5 +7,8 @@ internal data class LoginUiState(
     val isLoggedIn: Boolean = false,
     val emailAddress: String = "",
     val password: String = "",
-    val exceptionMessage: OneTimeState<String> = OneTimeState()
+    val isEmailValid: Boolean? = null,
+    val isPasswordValid: Boolean? = null,
+    val exceptionMessageRes: OneTimeState<Int> = OneTimeState(),
+    val isPasswordResetEmailSendSuccess: OneTimeState<Boolean> = OneTimeState()
 )
