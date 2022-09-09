@@ -1,6 +1,6 @@
 package dev.sertan.android.paper.data.mapper
 
-import dev.sertan.android.paper.data.model.DatabaseNote
+import dev.sertan.android.paper.data.model.NoteEntity
 import dev.sertan.android.paper.domain.model.Date
 import dev.sertan.android.paper.domain.model.NoteDto
 import java.util.UUID
@@ -9,7 +9,7 @@ import org.junit.Test
 internal class NoteMapperTest {
 
     @Test
-    fun `noteDto to databaseNote`() {
+    fun `noteDto to noteEntity`() {
         val noteDto = NoteDto(
             uid = UUID.randomUUID().toString(),
             userUid = UUID.randomUUID().toString(),
@@ -18,19 +18,19 @@ internal class NoteMapperTest {
             createDate = Date.fromMillisecond(0),
             updateDate = Date.fromMillisecond(0)
         )
-        val databaseNote = noteDto.toDatabaseNote()
 
-        assert(databaseNote.uid == noteDto.uid)
-        assert(databaseNote.userUid == noteDto.userUid)
-        assert(databaseNote.title == noteDto.title)
-        assert(databaseNote.content == noteDto.content)
-        assert(databaseNote.createDateMillis == noteDto.createDate.millisecond)
-        assert(databaseNote.updateDateMillis == noteDto.updateDate.millisecond)
+        val noteEntity = noteDto.toNoteEntity()
+        assert(noteEntity.uid == noteDto.uid)
+        assert(noteEntity.userUid == noteDto.userUid)
+        assert(noteEntity.title == noteDto.title)
+        assert(noteEntity.content == noteDto.content)
+        assert(noteEntity.createDateMillis == noteDto.createDate.millisecond)
+        assert(noteEntity.updateDateMillis == noteDto.updateDate.millisecond)
     }
 
     @Test
-    fun `databaseNote to noteDto`() {
-        val databaseNote = DatabaseNote(
+    fun `noteEntity to noteDto`() {
+        val noteEntity = NoteEntity(
             uid = UUID.randomUUID().toString(),
             userUid = UUID.randomUUID().toString(),
             title = null,
@@ -38,20 +38,20 @@ internal class NoteMapperTest {
             createDateMillis = 0,
             updateDateMillis = 0
         )
-        val noteDto = databaseNote.toNoteDto()
 
-        assert(noteDto?.uid == databaseNote.uid)
-        assert(noteDto?.userUid == databaseNote.userUid)
+        val noteDto = noteEntity.toNoteDto()
+        assert(noteDto?.uid == noteEntity.uid)
+        assert(noteDto?.userUid == noteEntity.userUid)
         assert(noteDto?.title?.isBlank() == true)
         assert(noteDto?.content?.isBlank() == true)
-        assert(noteDto?.createDate?.millisecond == databaseNote.createDateMillis)
-        assert(noteDto?.updateDate?.millisecond == databaseNote.updateDateMillis)
+        assert(noteDto?.createDate?.millisecond == noteEntity.createDateMillis)
+        assert(noteDto?.updateDate?.millisecond == noteEntity.updateDateMillis)
     }
 
     @Test
-    fun `databaseNoteList to noteDtoList`() {
-        val databaseNoteList = (0..2).map {
-            DatabaseNote(
+    fun `noteEntityList to noteDtoList`() {
+        val noteEntityList = (0..2).map {
+            NoteEntity(
                 uid = UUID.randomUUID().toString(),
                 userUid = UUID.randomUUID().toString(),
                 title = it.toString(),
@@ -60,9 +60,9 @@ internal class NoteMapperTest {
                 updateDateMillis = 0
             )
         }
-        val noteDtoList = databaseNoteList.toNoteDtoList()
 
-        assert(noteDtoList.size == databaseNoteList.size)
-        assert(noteDtoList == databaseNoteList.map { it.toNoteDto() })
+        val noteDtoList = noteEntityList.toNoteDtoList()
+        assert(noteDtoList.size == noteEntityList.size)
+        assert(noteDtoList == noteEntityList.map { it.toNoteDto() })
     }
 }

@@ -1,11 +1,11 @@
 package dev.sertan.android.paper.data.mapper
 
-import dev.sertan.android.paper.data.model.DatabaseNote
+import dev.sertan.android.paper.data.model.NoteEntity
 import dev.sertan.android.paper.domain.model.Date
 import dev.sertan.android.paper.domain.model.NoteDto
 
-internal fun NoteDto.toDatabaseNote(): DatabaseNote {
-    return DatabaseNote(
+internal fun NoteDto.toNoteEntity(): NoteEntity {
+    return NoteEntity(
         uid = uid,
         userUid = userUid,
         title = title,
@@ -15,17 +15,17 @@ internal fun NoteDto.toDatabaseNote(): DatabaseNote {
     )
 }
 
-internal fun DatabaseNote?.toNoteDto(): NoteDto? {
+internal fun NoteEntity?.toNoteDto(): NoteDto? {
     return this?.run {
         NoteDto(
             uid = uid,
-            userUid = userUid,
+            userUid = userUid ?: return null,
             title = title.orEmpty(),
             content = content.orEmpty(),
-            createDate = Date.fromMillisecond(createDateMillis),
-            updateDate = Date.fromMillisecond(updateDateMillis)
+            createDate = Date.fromMillisecond(createDateMillis ?: 0),
+            updateDate = Date.fromMillisecond(updateDateMillis ?: 0)
         )
     }
 }
 
-internal fun List<DatabaseNote>.toNoteDtoList(): List<NoteDto> = mapNotNull { it.toNoteDto() }
+internal fun List<NoteEntity>.toNoteDtoList(): List<NoteDto> = mapNotNull { it.toNoteDto() }

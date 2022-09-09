@@ -6,4 +6,6 @@
     <string name="register">Register</string>
     <string name="forgot_password_send_reset_email">Forgot your password?\nSend password reset email.</string>
     <string name="password_reset_email_send_success">Password reset email sent successfully.\nPlease don\'t forget to check your inbox.</string>
+    <string name="invalid_email_address">Invalid email address</string>
+    <string name="password_must_be_characters">Password must be at least 8 characters</string>
 </resources>

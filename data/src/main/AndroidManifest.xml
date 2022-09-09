@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="dev.sertan.android.paper.data" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dev.sertan.android.paper.data">
+
+    <application android:usesCleartextTraffic="true" />
+</manifest>

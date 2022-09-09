@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'de.mannodermaus.android-junit5'
 }
 
 android {
@@ -32,4 +33,10 @@ android {
 dependencies {
     // AndroidX
     implementation libs.coreKtx
+
+    // Test
+    testImplementation libs.junit
+    testImplementation libs.junitJupiterApi
+    testImplementation libs.junitJupiterParams
+    testRuntimeOnly libs.junitJupiterEngine
 }

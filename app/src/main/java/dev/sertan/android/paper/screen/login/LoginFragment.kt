@@ -42,12 +42,12 @@ internal class LoginFragment : Fragment(R.layout.fragment_login) {
         with(binding) {
             emailInputLayout.doAfterTextChanged(loginViewModel::updateEmailAddress)
             passwordInputLayout.doAfterTextChanged(loginViewModel::updatePassword)
-            logInButton.setOnClickListener { loginViewModel.logIn() }
+            // logInButton.setOnClickListener { loginViewModel.logIn() }
             registerButton.setOnClickListener {
                 navigateTo(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
             }
             sendPasswordResetEmailTextView.setOnClickListener {
-                loginViewModel.sendPasswordResetEmail()
+                // loginViewModel.sendPasswordResetEmail()
             }
         }
     }

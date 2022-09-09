@@ -13,6 +13,7 @@ buildscript {
         classpath plugs.googleServices
         classpath plugs.navigationSafeArgs
         classpath plugs.detekt
+        classpath plugs.androidJunit
     }
 }
 

@@ -9,5 +9,5 @@ fun validateEmailAddress(address: String): Boolean {
 }
 
 fun validatePassword(pwd: String): Boolean {
-    return pwd.length >= MIN_PASSWORD_LENGTH
+    return pwd.trim().length >= MIN_PASSWORD_LENGTH
 }

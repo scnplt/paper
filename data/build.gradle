@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -50,6 +51,11 @@ dependencies {
 
     // Coroutines
     implementation libs.coroutinesPlayServices
+
+    // Room
+    kapt libs.roomCompiler
+    implementation libs.roomRuntime
+    implementation libs.roomKtx
 
     // Test
     testImplementation libs.junit

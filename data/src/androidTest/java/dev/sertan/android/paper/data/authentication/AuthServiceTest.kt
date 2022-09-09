@@ -5,7 +5,9 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
+import kotlin.math.exp
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -13,7 +15,6 @@ import org.junit.Test
 @SmallTest
 @HiltAndroidTest
 internal class AuthServiceTest {
-
     private val testEmail = "test@test.com"
     private val testPassword = "12345678"
 
@@ -26,169 +27,134 @@ internal class AuthServiceTest {
     @Before
     fun setUp() = hiltRule.inject()
 
+    @After
+    fun teardown() {
+        runBlocking {
+            try {
+                authService.logIn(email = testEmail, password = testPassword)
+                authService.deleteAccount()
+            } catch (_: Exception) {
+            }
+        }
+    }
+
     @Test
-    fun getCurrentUser_success() = runBlocking {
+    fun getCurrentUser_returnNotNull(): Unit = runBlocking {
         with(authService) {
             register(email = testEmail, password = testPassword)
             logIn(email = testEmail, password = testPassword)
 
-            val result = getCurrentUser()
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.exception).isNull()
-            assertThat(result.data?.email).isEqualTo(testEmail)
+            val user = getCurrentUser()
+            assertThat(user).isNotNull()
         }
     }
 
     @Test
-    fun getCurrentUser_nullValue_ifNotLoggedIn() = runBlocking {
-        with(authService) {
-            val result = getCurrentUser()
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.exception).isNull()
-            assertThat(result.data).isNull()
-        }
+    fun getCurrentUser_returnNull_ifNotLoggedIn(): Unit = runBlocking {
+        val user = authService.getCurrentUser()
+        assertThat(user).isNull()
     }
 
     @Test
-    fun getCurrentUser_nullValue_ifLoggedOut() = runBlocking {
+    fun getCurrentUser_returnNull_ifLoggedOut(): Unit = runBlocking {
         with(authService) {
             register(email = testEmail, password = testPassword)
             logIn(email = testEmail, password = testPassword)
             logOut()
 
-            val result = getCurrentUser()
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.exception).isNull()
-            assertThat(result.data).isNull()
+            val user = getCurrentUser()
+            assertThat(user).isNull()
         }
     }
 
     @Test
-    fun getCurrentUser_nullValue_ifAccountDeleted() = runBlocking {
+    fun getCurrentUser_returnNull_ifAccountDeleted(): Unit = runBlocking {
         with(authService) {
             register(email = testEmail, password = testPassword)
             logIn(email = testEmail, password = testPassword)
             deleteAccount()
 
-            val currentUserResponse = getCurrentUser()
-            assertThat(currentUserResponse.isSuccess).isTrue()
-            assertThat(currentUserResponse.exception).isNull()
-            assertThat(currentUserResponse.data).isNull()
+            val user = getCurrentUser()
+            assertThat(user).isNull()
         }
     }
 
     @Test
-    fun register_success() = runBlocking {
+    fun register_returnTrue(): Unit = runBlocking {
         val result = authService.register(email = testEmail, password = testPassword)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.exception).isNull()
-        assertThat(result.data).isTrue()
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun register_failure_ifRegisteredBefore() = runBlocking {
-        with(authService) {
-            register(email = testEmail, password = testPassword)
+    fun register_returnFalse_ifRegisteredBefore(): Unit = runBlocking {
+        authService.register(email = testEmail, password = testPassword)
 
-            val result = register(email = testEmail, password = testPassword)
-            assertThat(result.isFailure).isTrue()
-            assertThat(result.exception).isNotNull()
-            assertThat(result.data).isNull()
-        }
+        val result = authService.register(email = testEmail, password = testPassword)
+        assertThat(result).isFalse()
     }
 
     @Test
-    fun logIn_success() = runBlocking {
-        with(authService) {
-            register(email = testEmail, password = testPassword)
+    fun logIn_returnTrue(): Unit = runBlocking {
+        authService.register(email = testEmail, password = testPassword)
 
-            val result = logIn(email = testEmail, password = testPassword)
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.exception).isNull()
-            assertThat(result.data).isTrue()
-        }
-    }
-
-    @Test
-    fun logIn_failure_ifNotRegistered() = runBlocking {
         val result = authService.logIn(email = testEmail, password = testPassword)
-        assertThat(result.isFailure).isTrue()
-        assertThat(result.exception).isNotNull()
-        assertThat(result.data).isNull()
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun logIn_failure_ifPasswordNotCorrect() = runBlocking {
-        with(authService) {
-            register(email = testEmail, password = testPassword)
-
-            val result = logIn(email = testEmail, password = "1$testPassword")
-            assertThat(result.isFailure).isTrue()
-            assertThat(result.exception).isNotNull()
-            assertThat(result.data).isNull()
-        }
+    fun logIn_returnFalse_ifNotRegistered(): Unit = runBlocking {
+        val result = authService.logIn(email = testEmail, password = testPassword)
+        assertThat(result).isFalse()
     }
 
     @Test
-    fun logOut_success() = runBlocking {
+    fun logIn_returnFalse_ifPasswordNotCorrect(): Unit = runBlocking {
+        authService.register(email = testEmail, password = testPassword)
+
+        val result = authService.logIn(email = testEmail, password = "1$testPassword")
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun logOut_returnTrue(): Unit = runBlocking {
         with(authService) {
             register(email = testEmail, password = testPassword)
             logIn(email = testEmail, password = testPassword)
 
             val result = logOut()
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.exception).isNull()
-            assertThat(result.data).isTrue()
+            assertThat(result).isTrue()
         }
     }
 
     @Test
-    fun logOut_failure_ifNotLoggedIn() = runBlocking {
+    fun logOut_returnFalse_ifNotLoggedIn(): Unit = runBlocking {
         val result = authService.logOut()
-        assertThat(result.isFailure).isTrue()
-        assertThat(result.exception).isNotNull()
-        assertThat(result.data).isNull()
+        assertThat(result).isFalse()
     }
 
     @Test
-    fun deleteAccount_success() = runBlocking {
+    fun deleteAccount_returnTrue(): Unit = runBlocking {
         with(authService) {
             register(email = testEmail, password = testPassword)
             logIn(email = testEmail, password = testPassword)
 
             val result = deleteAccount()
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.exception).isNull()
-            assertThat(result.data).isTrue()
+            assertThat(result).isTrue()
         }
     }
 
     @Test
-    fun deleteAccount_failure_ifNotLoggedIn() = runBlocking {
-        val result = authService.deleteAccount()
-        assertThat(result.isFailure).isTrue()
-        assertThat(result.exception).isNotNull()
-        assertThat(result.data).isNull()
-    }
+    fun sendPasswordResetEmail_returnTrue(): Unit = runBlocking {
+        authService.register(email = testEmail, password = testPassword)
 
-    @Test
-    fun sendPasswordResetEmail_success() = runBlocking {
-        with(authService) {
-            register(email = testEmail, password = testPassword)
-
-            val result = sendPasswordResetEmail(email = testEmail)
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.exception).isNull()
-            assertThat(result.data).isTrue()
-        }
-    }
-
-    @Test
-    fun sendPasswordResetEmail_failure_ifNotRegistered() = runBlocking {
         val result = authService.sendPasswordResetEmail(email = testEmail)
-        assertThat(result.isFailure).isTrue()
-        assertThat(result.exception).isNotNull()
-        assertThat(result.data).isNull()
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun sendPasswordResetEmail_returnFalse_ifNotRegistered(): Unit = runBlocking {
+        val result = authService.sendPasswordResetEmail(email = testEmail)
+        assertThat(result).isFalse()
     }
 }
 

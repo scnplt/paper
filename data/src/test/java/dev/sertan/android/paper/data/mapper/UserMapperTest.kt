@@ -13,8 +13,8 @@ internal class UserMapperTest {
             email = "test@test.com",
             password = "12345678"
         )
-        val userDto = networkUser.toUserDto()
 
+        val userDto = networkUser.toUserDto()
         assert(userDto?.uid == networkUser.uid)
         assert(userDto?.email.toString() == networkUser.email)
         assert(userDto?.password.toString() == networkUser.password)
