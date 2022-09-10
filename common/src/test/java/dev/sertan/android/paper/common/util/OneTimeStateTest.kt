@@ -1,6 +1,6 @@
 package dev.sertan.android.paper.common.util
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 internal class OneTimeStateTest {
 

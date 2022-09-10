@@ -2,7 +2,7 @@ package dev.sertan.android.paper.data.authentication
 
 import dev.sertan.android.paper.data.model.NetworkUser
 
-internal interface AuthService {
+interface AuthService {
     suspend fun getCurrentUser(): NetworkUser?
     suspend fun register(email: String, password: String): Boolean
     suspend fun logIn(email: String, password: String): Boolean

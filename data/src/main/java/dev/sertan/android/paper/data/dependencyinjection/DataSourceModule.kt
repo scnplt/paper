@@ -1,6 +1,7 @@
 package dev.sertan.android.paper.data.dependencyinjection
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
@@ -15,12 +16,20 @@ import dev.sertan.android.paper.data.datasource.note.local.NoteDatabase
 import dev.sertan.android.paper.data.datasource.note.remote.FirestoreNoteService
 import dev.sertan.android.paper.data.datasource.note.remote.FirestoreNoteService.Companion.NOTE_COLLECTION_INJECTION_NAME
 import dev.sertan.android.paper.data.datasource.note.remote.FirestoreNoteService.Companion.NOTE_COLLECTION_REFERENCE_NAME
+import dev.sertan.android.paper.data.datasource.user.CacheUserDataSource
+import dev.sertan.android.paper.data.datasource.user.UserDataSource
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DataSourceModule {
+
+    @Provides
+    @Singleton
+    fun provideSharedPref(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE)
+    }
 
     @Provides
     @Singleton
@@ -53,5 +62,11 @@ internal object DataSourceModule {
     @Named(NoteDataSource.LOCAL_INJECTION_NAME)
     fun provideLocalNoteDataSource(database: NoteDatabase): NoteDataSource {
         return database.noteDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCacheUserDataSource(sharedPreferences: SharedPreferences): UserDataSource {
+        return CacheUserDataSource(sharedPref = sharedPreferences)
     }
 }

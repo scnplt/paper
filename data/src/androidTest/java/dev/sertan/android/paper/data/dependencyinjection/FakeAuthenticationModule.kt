@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @TestInstallIn(components = [SingletonComponent::class], replaces = [AuthenticationModule::class])
-internal object FakeAuthServiceModule {
+internal object FakeAuthenticationModule {
 
     /*
      * If you are using [FirebaseEmulatorSuite](https://firebase.google.com/docs/emulator-suite),

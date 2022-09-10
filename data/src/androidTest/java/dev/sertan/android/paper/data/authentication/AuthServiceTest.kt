@@ -5,7 +5,6 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
-import kotlin.math.exp
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before

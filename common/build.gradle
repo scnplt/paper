@@ -34,6 +34,9 @@ dependencies {
     // AndroidX
     implementation libs.coreKtx
 
+    // Coroutines
+    implementation libs.coroutinesAndroid
+
     // Test
     testImplementation libs.junit
     testImplementation libs.junitJupiterApi

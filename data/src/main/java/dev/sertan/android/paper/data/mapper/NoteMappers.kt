@@ -29,3 +29,7 @@ internal fun NoteEntity?.toNoteDto(): NoteDto? {
 }
 
 internal fun List<NoteEntity>.toNoteDtoList(): List<NoteDto> = mapNotNull { it.toNoteDto() }
+
+internal fun Array<out NoteDto>.toNoteEntityList(): List<NoteEntity> {
+    return mapNotNull { it.toNoteEntity() }
+}

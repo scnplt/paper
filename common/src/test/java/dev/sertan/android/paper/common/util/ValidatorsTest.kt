@@ -23,7 +23,6 @@ internal class ValidatorsTest {
         }
     }
 
-
     @TestFactory
     fun `password validation`() = listOf(
         "" to false,
